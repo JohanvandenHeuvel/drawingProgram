@@ -10,7 +10,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.designController">
   <!-- TODO Add Nodes -->
   <center>
-    <Pane fx:id="DrawingPane" minWidth="640.0" onMouseDragged="#drag_DrawingPane" onMouseMoved="#move_DrawingPane" prefHeight="-1.0" prefWidth="-1.0">
+    <Pane fx:id="DrawingPane" minWidth="640.0" onMouseClicked="#click_DrawingPane" onMouseDragged="#drag_DrawingPane" onMouseMoved="#move_DrawingPane" prefHeight="-1.0" prefWidth="-1.0">
       <children>
         <Separator layoutX="0.0" layoutY="0.0" orientation="VERTICAL" prefHeight="793.0" />
       </children>
@@ -87,15 +87,6 @@
                 </ImageView>
               </graphic>
             </ToggleButton>
-            <ToggleButton id="Text" fx:id="Import" mnemonicParsing="false" text="" toggleGroup="$Tools" GridPane.columnIndex="0" GridPane.rowIndex="4">
-              <graphic>
-                <ImageView fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                    <Image url="@../../../../Pictures/Files-View-File-icon.png" />
-                  </image>
-                </ImageView>
-              </graphic>
-            </ToggleButton>
             <ColorPicker fx:id="Colorpicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0001220703125" prefWidth="122.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ToggleButton fx:id="Text" mnemonicParsing="false" text="" toggleGroup="$Tools" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
               <graphic>
@@ -106,6 +97,15 @@
                 </ImageView>
               </graphic>
             </ToggleButton>
+            <Button fx:id="Import" minHeight="100.0" minWidth="122.0" mnemonicParsing="false" onMouseClicked="#click_Import" prefHeight="100.0" prefWidth="122.0" text="" GridPane.columnIndex="0" GridPane.rowIndex="4">
+              <graphic>
+                <ImageView id="Import" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                    <Image url="@../../../../Pictures/Files-View-File-icon.png" />
+                  </image>
+                </ImageView>
+              </graphic>
+            </Button>
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

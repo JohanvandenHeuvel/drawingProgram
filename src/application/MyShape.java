@@ -12,7 +12,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public class MyShape {
+public class MyShape implements MyNode {
 	
 	private Shape shape;
 	private Circle[] anchors = new Circle[8];
@@ -63,7 +63,7 @@ public class MyShape {
 		
 	}
 	
-	public void moveShape(double x1, double y1, double x2, double y2)
+	public void move(double x1, double y1, double x2, double y2)
 	{
 		if(shape instanceof Line)
 			shape = new Line(x1, y1, x1+x2, y1+y2);
@@ -73,7 +73,7 @@ public class MyShape {
 			shape = new Ellipse(x1 + (x2/2), y1 + (y2/2), x2/2, y2/2);
 	}
 	
-	public Circle[] addAnchors()
+	private Circle[] addAnchors()
 	{
 		Bounds bounds = shape.getBoundsInParent();
 		
@@ -117,7 +117,7 @@ public class MyShape {
 		setSelected(false);
 	}
 	
-	public Rectangle addBox()
+	private Rectangle addBox()
 	{	
 		Bounds bounds = shape.getBoundsInParent();
 		Rectangle box = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
@@ -128,12 +128,12 @@ public class MyShape {
 		return box;
 	}
 	
-	public void drawShape()
+	public void draw()
 	{
 		DrawingPane.getChildren().add(shape);
 	}
 	
-	public void eraseShape()
+	public void erase()
 	{
 		DrawingPane.getChildren().remove(shape);
 	}

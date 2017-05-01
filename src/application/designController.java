@@ -1,32 +1,36 @@
 package application;
 
-import java.awt.Point;
+import java.io.File;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.*;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+
+//TODO Move Image
+//TODO Fix Line
+//TODO Move Text
+//TODO Fix Text
+//TODO Merge MyShape,MyImage,MyText into MyNode 
+//TODO Add undo
 
 public class designController {
-	@FXML private ToggleButton Rectangle, Ellipse, Line, Delete, Select, Fill, Text, Strokecolor, Strokewidth, Import;
+	@FXML private ToggleButton Rectangle, Ellipse, Line, Delete, Select, Fill, Text, Strokecolor, Strokewidth;
+	@FXML private Button Import;
 	@FXML private ToggleGroup Tools;
 	@FXML private Slider SliderStrokewidth;
 	@FXML private ColorPicker Colorpicker;
@@ -34,6 +38,7 @@ public class designController {
 	
 	int selected;
 	ArrayList<MyShape> shapes = new ArrayList<MyShape>();
+	ArrayList<MyText> texts = new ArrayList<MyText>();
 	int resizing = -1;
 	
 	private double x1;
@@ -41,6 +46,13 @@ public class designController {
 	private double x2;
 	private double y2;
 	
+	@FXML protected void click_Import()
+	{
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Image File");
+		File file = fileChooser.showOpenDialog(DrawingPane.getScene().getWindow());
+		new MyImage(file, DrawingPane);
+	}
 	
 	/**
 	 * Each time the cursor its moved it is checked what kind of cursor to use
@@ -57,7 +69,57 @@ public class designController {
 		});
 	}
 	
-	@FXML protected void click_DrawingPane(){}
+	@FXML protected void click_DrawingPane()
+	{
+		DrawingPane.setOnMouseClicked(new EventHandler<MouseEvent>()
+		{
+			@Override
+			public void handle(MouseEvent event)
+			{
+				if(event.getClickCount() == 2)
+				{
+					
+					for(Node n : DrawingPane.getChildren())
+					{
+						if(event.getTarget().equals(n) && n instanceof Text)
+						{
+							for(MyText t : texts)
+							{
+								if(t.getText().equals(n))
+								{
+									System.out.println("Test");
+									t.enableTextField();
+								}
+							}
+						}
+					}
+				}
+				/*
+				if(event.getClickCount() == 1)
+				{
+					for(Node n : DrawingPane.getChildren())
+					{
+						System.out.println(event.getTarget());
+						if(event.getTarget().equals(DrawingPane))
+						{
+							for(MyText t : texts)
+							{
+								t.disableTextField();
+							}
+						}
+						else if(event.getTarget().equals(n) && !(n instanceof TextField))
+						{
+							for(MyText t : texts)
+							{
+								t.disableTextField();
+							}
+						}
+					}
+				}
+				*/
+			}
+		});
+	}
 	
 	@FXML protected void drag_DrawingPane()
 	{
@@ -71,13 +133,13 @@ public class designController {
 				
 				switch (toggle_to_string()) {
 					case "Text":
-						Text t = new Text(x1, y1, "This is a test");
-						DrawingPane.getChildren().addAll(t);
+						texts.add(new MyText(x1, y1, DrawingPane));
+						break;
 					case "Line":
 					case "Rectangle":
 					case "Ellipse":
 						shapes.add(new MyShape(toggle_to_string(), DrawingPane));
-						shapes.get(shapes.size()-1).drawShape();
+						shapes.get(shapes.size()-1).draw();
 						selected = shapes.size()-1; //TODO 
 						break;
 					case "Select":
@@ -116,10 +178,10 @@ public class designController {
 				|| Tools.getSelectedToggle() == Rectangle
 				|| Tools.getSelectedToggle() == Ellipse)
 				{
-					shapes.get(selected).eraseShape();
+					shapes.get(selected).erase();
 					shapes.get(selected).dragShape(x1, y1, x2, y2);
 					select(selected);
-					shapes.get(selected).drawShape();
+					shapes.get(selected).draw();
 				}
 				if(Tools.getSelectedToggle() == Select)
 				{	
@@ -127,7 +189,7 @@ public class designController {
 					{
 						System.out.println("resizing");
 						Bounds b = shapes.get(selected).getShape().getBoundsInParent();
-						shapes.get(selected).eraseShape();
+						shapes.get(selected).erase();
 						switch (resizing) {
 						case 1:
 							shapes.get(selected).resizeShape(	
@@ -189,7 +251,7 @@ public class designController {
 							break;
 						};
 						select(selected);
-						shapes.get(selected).drawShape();	
+						shapes.get(selected).draw();	
 						
 						x1 = x2;
 						y1 = y2;
@@ -198,19 +260,20 @@ public class designController {
 					{
 						System.out.println("Moving");
 						Bounds b = shapes.get(selected).getShape().getBoundsInParent();
-						shapes.get(selected).eraseShape();
-						/*
-						shapes.get(selected).moveShape(	b.getMinX() + (x2 - x1) , 
+						shapes.get(selected).erase();
+						
+						shapes.get(selected).move(	b.getMinX() + (x2 - x1) , 
 														b.getMinY() + (y2 - y1), 
 														b.getWidth(), b.getHeight());
-														*/
+						/*					
 						shapes.get(selected).moveShape(	
-								shapes.get(selected).getShape().getStartX, 
+								50, 
 								50, 
 								10, 
 								10);
+								*/
 						select(selected);
-						shapes.get(selected).drawShape();
+						shapes.get(selected).draw();
 						
 						x1 = x2;
 						y1 = y2;
@@ -272,7 +335,7 @@ public class designController {
 	Cursor setCursor(MouseEvent event)
 	{
 		Shape temp = selectedShape(event);	
-		if(temp != null && selected >= 0)
+		if(temp != null && selected >= 0 && shapes != null)
 		{
 			Circle[] anchors = shapes.get(selected).getAnchors();
 			for(int i = 0; i < anchors.length; i++)
@@ -317,7 +380,7 @@ public class designController {
 	
 	public void delete(int i)
 	{
-		shapes.get(i).eraseShape();
+		shapes.get(i).erase();
 		shapes.remove(i);
 	}
 	
@@ -348,8 +411,6 @@ public class designController {
 	{
 		if(Tools.getSelectedToggle() == Text)
 			return "Text";
-		if(Tools.getSelectedToggle() == Import)
-			return "Import";
 		if(Tools.getSelectedToggle() == Line)
 			return "Line";
 		if(Tools.getSelectedToggle() == Rectangle)
