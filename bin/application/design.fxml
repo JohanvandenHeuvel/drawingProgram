@@ -10,7 +10,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.designController">
   <!-- TODO Add Nodes -->
   <center>
-    <Pane fx:id="DrawingPane" minWidth="640.0" onMouseClicked="#click_DrawingPane" onMouseDragged="#drag_DrawingPane" onMouseMoved="#move_DrawingPane" prefHeight="-1.0" prefWidth="-1.0">
+    <Pane fx:id="DrawingPane" minWidth="640.0" onKeyPressed="#keyPress" onMouseClicked="#click_DrawingPane" onMouseDragged="#drag_DrawingPane" onMouseMoved="#move_DrawingPane" prefHeight="-1.0" prefWidth="-1.0">
       <children>
         <Separator layoutX="0.0" layoutY="0.0" orientation="VERTICAL" prefHeight="793.0" />
       </children>

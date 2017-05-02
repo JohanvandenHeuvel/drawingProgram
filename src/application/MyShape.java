@@ -63,15 +63,27 @@ public class MyShape implements MyNode {
 		
 	}
 	
-	public void move(double x1, double y1, double x2, double y2)
+	public void move(double delta_x, double delta_y)
 	{
+		Bounds b = shape.getBoundsInParent();
+		
+		double x1 = b.getMinX() + delta_x;
+		double y1 = b.getMinY() + delta_y; 
+		double x2 = b.getWidth();
+		double y2 = b.getHeight();
+		
+		erase();
+		
 		if(shape instanceof Line)
 			shape = new Line(x1, y1, x1+x2, y1+y2);
 		if(shape instanceof Rectangle)
 			shape = new Rectangle(x1, y1, x2, y2); 
 		if(shape instanceof Ellipse)
 			shape = new Ellipse(x1 + (x2/2), y1 + (y2/2), x2/2, y2/2);
+		
+		//draw();
 	}
+	
 	
 	private Circle[] addAnchors()
 	{

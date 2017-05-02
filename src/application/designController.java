@@ -13,6 +13,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -25,8 +27,12 @@ import javafx.stage.FileChooser;
 //TODO Fix Line
 //TODO Move Text
 //TODO Fix Text
-//TODO Merge MyShape,MyImage,MyText into MyNode 
+//TODO Implement MyNode in MyShape,MyImage,MyText
 //TODO Add undo
+//TODO Add timer
+//TODO Big leds angle
+
+//ASK (1) Interface		(2) Click to deselect TextField
 
 public class designController {
 	@FXML private ToggleButton Rectangle, Ellipse, Line, Delete, Select, Fill, Text, Strokecolor, Strokewidth;
@@ -37,14 +43,35 @@ public class designController {
 	@FXML private Pane DrawingPane;
 	
 	int selected;
-	ArrayList<MyShape> shapes = new ArrayList<MyShape>();
+	ArrayList<MyNode> shapes = new ArrayList<MyNode>();
 	ArrayList<MyText> texts = new ArrayList<MyText>();
+	ArrayList<MyImage> images = new ArrayList<MyImage>();
 	int resizing = -1;
 	
 	private double x1;
 	private double y1;
 	private double x2;
 	private double y2;
+	
+	
+	@FXML protected void keyPress() //TODO not working properly
+	{
+		System.out.println("Key");
+		DrawingPane.setOnKeyPressed(new EventHandler<KeyEvent>()
+		{
+			@Override
+			public void handle(KeyEvent event) 
+			{
+				
+				 if(event.getCode().equals(KeyCode.DELETE))
+	               {
+					 	System.out.println("Delete");
+					 	delete(selected);
+	               }
+			}
+		});
+	}
+	
 	
 	@FXML protected void click_Import()
 	{
@@ -146,7 +173,7 @@ public class designController {
 						resizing = isAnchor(event);
 						if(resizing == -1)
 						{
-							select(selected(event));
+							select(selected(event)); //TODO cannot select old shapes
 						}
 						break;
 					case "Delete":
@@ -154,10 +181,14 @@ public class designController {
 						break;
 					case "Fill":
 					case "Strokecolor":
-						shapes.get(selected(event)).manipulateShape(getColor(), toggle_to_string());
+						if(shapes.get(selected) instanceof MyShape)
+							((MyShape)shapes.get(selected(event))).manipulateShape(getColor(), toggle_to_string());
+						//shapes.get(selected(event)).manipulateShape(getColor(), toggle_to_string());
 						break;
 					case "Strokewidth":
-						shapes.get(selected(event)).manipulateShape(getSlider());
+						if(shapes.get(selected) instanceof MyShape)
+							((MyShape)shapes.get(selected(event))).manipulateShape(getSlider());
+						//shapes.get(selected(event)).manipulateShape(getSlider());
 						break;
 					default:
 						break;
@@ -178,70 +209,74 @@ public class designController {
 				|| Tools.getSelectedToggle() == Rectangle
 				|| Tools.getSelectedToggle() == Ellipse)
 				{
-					shapes.get(selected).erase();
-					shapes.get(selected).dragShape(x1, y1, x2, y2);
-					select(selected);
-					shapes.get(selected).draw();
+					if(shapes.get(selected) instanceof MyShape)
+					{
+						shapes.get(selected).erase();
+						((MyShape)shapes.get(selected)).dragShape(x1, y1, x2, y2);
+						select(selected);
+						shapes.get(selected).draw();
+					}
 				}
 				if(Tools.getSelectedToggle() == Select)
 				{	
 					if(resizing != -1)
 					{
-						System.out.println("resizing");
-						Bounds b = shapes.get(selected).getShape().getBoundsInParent();
+						if(shapes.get(selected) instanceof MyShape)
+						{
+						Bounds b = ((MyShape)shapes.get(selected)).getShape().getBoundsInParent();
 						shapes.get(selected).erase();
 						switch (resizing) {
 						case 1:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX() + (x2 - x1), 
 									b.getMinY(), 
 									b.getWidth() - (x2 - x1), 
 									b.getHeight());
 							break;
 						case 2:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX() + (x2 - x1), 
 									b.getMinY(), 
 									b.getWidth() - (x2 - x1), 
 									b.getHeight() + (y2 - y1));
 							break;
 						case 3:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX(), 
 									b.getMinY() + (y2 - y1), 
 									b.getWidth(), 
 									b.getHeight() - (y2 - y1));
 							break;
 						case 4:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX(), 
 									b.getMinY(), 
 									b.getWidth(), 
 									b.getHeight() + (y2 - y1));
 							break;
 						case 5:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX(), 
 									b.getMinY() + (y2 - y1), 
 									b.getWidth() + (x2 - x1), 
 									b.getHeight() - (y2 - y1));
 							break;
 						case 6:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX(), 
 									b.getMinY(), 
 									b.getWidth() + (x2 - x1), 
 									b.getHeight());
 							break;
 						case 7:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX(), 
 									b.getMinY(), 
 									b.getWidth() + (x2 - x1), 
 									b.getHeight() + (y2 - y1));
 							break;
 						case 0:
-							shapes.get(selected).resizeShape(	
+							((MyShape)shapes.get(selected)).resizeShape(	
 									b.getMinX() + (x2 - x1), 
 									b.getMinY() + (y2 - y1), 
 									b.getWidth() - (x2 - x1), 
@@ -255,24 +290,12 @@ public class designController {
 						
 						x1 = x2;
 						y1 = y2;
+						}
 					}
 					else
 					{
-						System.out.println("Moving");
-						Bounds b = shapes.get(selected).getShape().getBoundsInParent();
-						shapes.get(selected).erase();
-						
-						shapes.get(selected).move(	b.getMinX() + (x2 - x1) , 
-														b.getMinY() + (y2 - y1), 
-														b.getWidth(), b.getHeight());
-						/*					
-						shapes.get(selected).moveShape(	
-								50, 
-								50, 
-								10, 
-								10);
-								*/
-						select(selected);
+						shapes.get(selected).move((x2 - x1), (y2 - y1));
+						select(selected); //TODO make selection done in MyClass itself
 						shapes.get(selected).draw();
 						
 						x1 = x2;
@@ -305,12 +328,15 @@ public class designController {
 		Shape temp = selectedShape(event);
 		if(temp != null && selected >= 0)
 		{
-			Circle[] anchors = shapes.get(selected).getAnchors();
-			for(int i = 0; i < anchors.length; i++)
+			if(shapes.get(selected) instanceof MyShape)
 			{
-				if(temp.equals(anchors[i]))
+				Circle[] anchors = ((MyShape)shapes.get(selected)).getAnchors();
+				for(int i = 0; i < anchors.length; i++)
 				{
-					return i;
+					if(temp.equals(anchors[i]))
+					{
+						return i;
+					}
 				}
 			}
 		}
@@ -323,7 +349,7 @@ public class designController {
 		{
 			for(int i = 0; i < shapes.size(); i++)
 			{
-				if (event.getTarget().equals(shapes.get(i).getShape()))
+				if (event.getTarget().equals(((MyShape)shapes.get(i)).getShape()))
 				{
 					return i;
 				}
@@ -337,33 +363,37 @@ public class designController {
 		Shape temp = selectedShape(event);	
 		if(temp != null && selected >= 0 && shapes != null)
 		{
-			Circle[] anchors = shapes.get(selected).getAnchors();
-			for(int i = 0; i < anchors.length; i++)
+			if(shapes.get(selected) instanceof MyShape)
 			{
-				if(temp.equals(anchors[i]))
+				Circle[] anchors = ((MyShape)shapes.get(selected)).getAnchors();
+				for(int i = 0; i < anchors.length; i++)
 				{
-					switch (i) {
-					case 1:
-						return Cursor.E_RESIZE;
-					case 2:
-						return Cursor.SW_RESIZE;
-					case 3:
-						return Cursor.N_RESIZE;
-					case 4:
-						return Cursor.S_RESIZE;
-					case 5:
-						return Cursor.NE_RESIZE;
-					case 6:
-						return Cursor.E_RESIZE;
-					case 7:
-						return Cursor.SE_RESIZE;
-					case 0:
-						return Cursor.NW_RESIZE;
-					default:
-						break;
+					if(temp.equals(anchors[i]))
+					{
+						switch (i) {
+						case 1:
+							return Cursor.E_RESIZE;
+						case 2:
+							return Cursor.SW_RESIZE;
+						case 3:
+							return Cursor.N_RESIZE;
+						case 4:
+							return Cursor.S_RESIZE;
+						case 5:
+							return Cursor.NE_RESIZE;
+						case 6:
+							return Cursor.E_RESIZE;
+						case 7:
+							return Cursor.SE_RESIZE;
+						case 0:
+							return Cursor.NW_RESIZE;
+						default:
+							break;
+						}
 					}
 				}
 			}
+			
 		}
 		
 		/*
@@ -380,13 +410,14 @@ public class designController {
 	
 	public void delete(int i)
 	{
+		shapes.get(i).unselect();
 		shapes.get(i).erase();
 		shapes.remove(i);
 	}
 	
 	public void select(int i)
 	{
-		for(MyShape s: shapes)
+		for(MyNode s: shapes)
 		{
 			if(s.getSelected() == true)
 				s.unselect();
