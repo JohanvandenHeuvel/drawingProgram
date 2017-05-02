@@ -11,11 +11,11 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-public class MyImage {
+public class MyImage implements MyNode{
 	private ImageView image;
 	private Rectangle box;
 	private Pane DrawingPane;
-	private Boolean selected;
+	private Boolean selected = false;
 	
 	public MyImage(File file, Pane DrawingPane)
 	{
@@ -28,15 +28,20 @@ public class MyImage {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			drawImage();
-			select();
 		}
 	}
 	
-	public void moveImage(double x1, double y1)
+	public void move(double delta_X, double delta_Y)
 	{
-		image.setX(x1);
-		image.setY(y1);
+		Bounds b = image.getBoundsInParent();
+		
+		erase();
+		
+		image.setX(b.getMinX() + delta_X);
+		image.setY(b.getMinY() + delta_Y);
+		
+		//draw();
+		
 	}
 	
 	private Rectangle addBox()
@@ -66,17 +71,26 @@ public class MyImage {
 		setSelected(false);
 	}
 	
-	public void drawImage()
+	public void draw()
 	{
 		DrawingPane.getChildren().add(image);
 	}
 	
-	public void eraseImage()
+	public void erase()
 	{
 		DrawingPane.getChildren().remove(image);
 	}
 	
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
+	}
+
+	public Boolean getSelected() {
+		return selected;
+	}
+	
+	public ImageView getImage()
+	{
+		return image;
 	}
 }

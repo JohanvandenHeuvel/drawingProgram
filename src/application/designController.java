@@ -13,6 +13,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -78,7 +79,10 @@ public class designController {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Image File");
 		File file = fileChooser.showOpenDialog(DrawingPane.getScene().getWindow());
-		new MyImage(file, DrawingPane);
+		shapes.add(new MyImage(file, DrawingPane));
+		shapes.get(shapes.size()-1).draw();
+		selected = shapes.size()-1;
+		select(selected);
 	}
 	
 	/**
@@ -318,7 +322,8 @@ public class designController {
 	{
 		if(!event.getTarget().equals(DrawingPane))
 		{
-			return (Shape) event.getTarget();
+			if(event.getTarget() instanceof Shape)
+				return (Shape) event.getTarget();
 		}
 		return null;
 	}
@@ -343,13 +348,20 @@ public class designController {
 		return -1;
 	}
 	
-	public int selected(MouseEvent event)
+	public int selected(MouseEvent event) //TODO Detects box ontop of ImageView
 	{
 		if(!event.getTarget().equals(DrawingPane))
 		{
+			System.out.println(event.getTarget());
 			for(int i = 0; i < shapes.size(); i++)
 			{
-				if (event.getTarget().equals(((MyShape)shapes.get(i)).getShape()))
+				if (event.getTarget() instanceof Shape 
+						&& shapes.get(i) instanceof MyShape
+						&& event.getTarget().equals(((MyShape)shapes.get(i)).getShape())) 
+				{
+					return i;
+				}
+				else if (event.getTarget().equals(((MyImage)shapes.get(i)).getImage()))
 				{
 					return i;
 				}
@@ -410,6 +422,7 @@ public class designController {
 	
 	public void delete(int i)
 	{
+		System.out.println(i);
 		shapes.get(i).unselect();
 		shapes.get(i).erase();
 		shapes.remove(i);
