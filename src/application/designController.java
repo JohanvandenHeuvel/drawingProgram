@@ -348,7 +348,7 @@ public class designController {
 		return -1;
 	}
 	
-	public int selected(MouseEvent event) //TODO Detects box ontop of ImageView
+	public int selected(MouseEvent event) //TODO Detects box ontop of ImageView, (fix by looking at box of MyNode)
 	{
 		if(!event.getTarget().equals(DrawingPane))
 		{
