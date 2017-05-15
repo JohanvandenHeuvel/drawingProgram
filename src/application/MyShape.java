@@ -134,9 +134,10 @@ public class MyShape implements MyNode {
 		Bounds bounds = shape.getBoundsInParent();
 		Rectangle box = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
 		box.setFill(Color.TRANSPARENT);
-		box.setStrokeWidth(2.0);
-		box.setStroke(Color.BLACK);
+		box.setStrokeWidth(5.0);
+		box.setStroke(Color.RED);
 		box.setStrokeDashOffset(1.0);
+		box.getStrokeDashArray().addAll(25d, 20d, 5d, 20d);
 		return box;
 	}
 	

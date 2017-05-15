@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.designController">
+<BorderPane fx:id="borderPane" onKeyPressed="#keyPress" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.designController">
   <!-- TODO Add Nodes -->
   <center>
-    <Pane fx:id="DrawingPane" minWidth="640.0" onKeyPressed="#keyPress" onMouseClicked="#click_DrawingPane" onMouseDragged="#drag_DrawingPane" onMouseMoved="#move_DrawingPane" prefHeight="-1.0" prefWidth="-1.0">
+    <Pane fx:id="DrawingPane" minWidth="640.0" onMouseClicked="#click_DrawingPane" onMouseDragged="#drag_DrawingPane" onMouseMoved="#move_DrawingPane" prefHeight="-1.0" prefWidth="-1.0">
       <children>
         <Separator layoutX="0.0" layoutY="0.0" orientation="VERTICAL" prefHeight="793.0" />
       </children>
@@ -25,7 +25,7 @@
               <graphic>
                 <ImageView id="Rectangle_Image" fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Rectangle-icon.png" />
+                    <Image url="@../images/Editing-Rectangle-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -37,7 +37,7 @@
               <graphic>
                 <ImageView id="Rectangle_Image" fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Ellipse-icon.png" />
+                    <Image url="@../images/Editing-Ellipse-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -46,7 +46,7 @@
               <graphic>
                 <ImageView id="Rectangle_Image" fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Line-icon.png" />
+                    <Image url="@../images/Editing-Line-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -55,7 +55,7 @@
               <graphic>
                 <ImageView id="Rectangle_Image" fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Eraser-icon.png" />
+                    <Image url="@../images/Editing-Eraser-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -64,7 +64,7 @@
               <graphic>
                 <ImageView id="Rectangle_Image" fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Cursor-icon.png" />
+                    <Image url="@../images/Cursor-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -73,7 +73,7 @@
               <graphic>
                 <ImageView id="Rectangle_Image" fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Background-Color-icon.png" />
+                    <Image url="@../images/Editing-Background-Color-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -82,7 +82,7 @@
               <graphic>
                 <ImageView fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Line-Width-icon.png" />
+                    <Image url="@../images/Editing-Line-Width-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -92,7 +92,7 @@
               <graphic>
                 <ImageView fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Editing-Generic-Text-icon.png" />
+                    <Image url="@../images/Editing-Generic-Text-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
@@ -101,7 +101,7 @@
               <graphic>
                 <ImageView id="Import" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                   <image>
-                    <Image url="@../../../../Pictures/Files-View-File-icon.png" />
+                    <Image url="@../images/Files-View-File-icon.png" />
                   </image>
                 </ImageView>
               </graphic>
