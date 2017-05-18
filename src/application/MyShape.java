@@ -11,10 +11,13 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 
 public class MyShape implements MyNode {
 	
 	private Shape shape;
+	private Shape shape_settings;
 	private Circle[] anchors = new Circle[8];
 	private Rectangle box;
 	private Pane DrawingPane;
@@ -29,6 +32,11 @@ public class MyShape implements MyNode {
 		if(shape_type == "Ellipse")
 			shape = new Ellipse();  
 		this.DrawingPane = DrawingPane;
+		shape_settings = shape;
+		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
+		if(shape_type != "Line")
+			shape_settings.setStrokeType(StrokeType.INSIDE);
+		//use settings
 	}
 	
 	public MyShape(double x1, double y1, double x2, double y2, String shape_type, Pane DrawingPane)
@@ -40,6 +48,11 @@ public class MyShape implements MyNode {
 		if(shape_type == "Ellipse")
 			shape = new Ellipse(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));  
 		this.DrawingPane = DrawingPane;
+		shape_settings = shape;
+		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
+		if(shape_type != "Line")
+			shape_settings.setStrokeType(StrokeType.INSIDE);
+		//use settings
 	}
 	
 	public void dragShape(double x1, double y1, double x2, double y2)
@@ -50,17 +63,27 @@ public class MyShape implements MyNode {
 			shape = new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2)); 
 		if(shape instanceof Ellipse)
 			shape = new Ellipse(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));
+		setSettings();
 	}
 	
 	public void resizeShape(double x1, double y1, double x2, double y2)
 	{
 		if(shape instanceof Line)
-			shape = new Line(x1, y1, x2, y2);
+		{
+			if(((Line) shape).getStartY() > ((Line) shape).getEndY())
+			{	
+				shape = new Line(x1, y1+(--y2),x1+(--x2),y1);
+			}
+			else
+			{
+				shape = new Line(x1, y1,x1+(--x2),y1+(--y2));
+			}
+		}
 		if(shape instanceof Rectangle)
 			shape = new Rectangle(x1, y1, Math.max(x2, 10.0), Math.max(y2, 10.0)); 
 		if(shape instanceof Ellipse)
 			shape = new Ellipse(x1 + (x2/2), y1 + (y2/2),Math.max(x2/2, 10.0), Math.max(y2/2, 10.0));
-		
+		setSettings();
 	}
 	
 	public void move(double delta_x, double delta_y)
@@ -69,8 +92,21 @@ public class MyShape implements MyNode {
 		
 		double x1 = b.getMinX() + delta_x;
 		double y1 = b.getMinY() + delta_y; 
-		double x2 = b.getWidth();
-		double y2 = b.getHeight();
+		
+		double x2 = Math.round(b.getWidth());
+		double y2 = Math.round(b.getHeight());
+		
+		if(shape instanceof Line) //Line moving working sluggish
+		{
+			x2--;
+			y2--;
+
+			if(((Line) shape).getStartY() > ((Line) shape).getEndY())
+			{	
+				y1 = y1 + y2;
+				y2 = -y2;
+			}
+		}
 		
 		erase();
 		
@@ -81,26 +117,60 @@ public class MyShape implements MyNode {
 		if(shape instanceof Ellipse)
 			shape = new Ellipse(x1 + (x2/2), y1 + (y2/2), x2/2, y2/2);
 		
+		setSettings();
 		//draw();
+	}
+	
+	private void setSettings()
+	{
+		shape.setStrokeLineCap(StrokeLineCap.BUTT);
+		shape.setStrokeType(shape_settings.getStrokeType());
+		shape.setStrokeWidth(shape_settings.getStrokeWidth());
+		shape.setFill(shape_settings.getFill());
+		shape.setStroke(shape_settings.getStroke());
 	}
 	
 	
 	private Circle[] addAnchors()
 	{
 		Bounds bounds = shape.getBoundsInParent();
+		Circle[] anchor = new Circle[8];
+		Point[] positions = new Point[8];
 		
 		int x = (int) (bounds.getMinX());
 		int y = (int) (bounds.getMinY());
 		int width = (int) (bounds.getWidth());
 		int height = (int) (bounds.getHeight());
 		
-		Circle[] anchor = new Circle[8];
-		Point[] positions = { 	new Point(x, y), 			new Point(x, y+height/2), 		new Point(x, y+height), 
+		if(shape instanceof Line)
+		{
+			//if line lower-left to upper-right
+			if(((Line) shape).getStartY() > ((Line) shape).getEndY()
+					&& ((Line) shape).getStartX() < ((Line) shape).getEndX())
+			{	
+				positions[2] = new Point(x, y+height);
+				positions[5] = new Point(x+width,y);
+			}
+			else
+			{
+				positions[0] = new Point(x, y);
+				positions[7] = new Point(x+width,y+height);
+				
+			}
+		}
+		else
+		{
+			Point[] temp = { 	new Point(x, y), 			new Point(x, y+height/2), 		new Point(x, y+height), 
 								new Point(x+width/2, y), 									new Point(x+width/2, y+height), 
 								new Point(x+width, y), 		new Point(x+width, y+height/2), new Point(x+width, y+height)};
+			positions = temp;
+		}
 		
 		for(int i = 0; i < positions.length; i++)
 		{
+			if(positions[i] == null)
+				positions[i] = new Point();
+			//TODO find better fix
 			Circle c = new Circle(positions[i].getX(),positions[i].getY(), 10.0);
 			c.setFill(Color.TRANSPARENT);
 			c.setStroke(Color.YELLOW);
@@ -156,16 +226,19 @@ public class MyShape implements MyNode {
 		if(choice == "Strokecolor")
 		{
 			shape.setStroke(color);
+			shape_settings.setStroke(color);
 		}
 		if(choice == "Fill" && !(shape instanceof Line))
 		{
 			shape.setFill(color);
+			shape_settings.setFill(color);
 		}
 	}
 
 	public void manipulateShape(double stroke_width)
 	{
 		shape.setStrokeWidth(stroke_width);
+		shape_settings.setStrokeWidth(stroke_width);
 	}
 
 	public Shape getShape() {

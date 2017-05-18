@@ -24,15 +24,18 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.scene.shape.Rectangle;
 
-//TODO Move Image
 //TODO Fix Line
 //TODO Move Text
 //TODO Fix Text
 //TODO Add undo
 //TODO Add timer
 //TODO Big leds angle
+//TODO make double click not select box
+//TODO after setting stroke width moving makes the shape bigger -> set strokeWidth makes shape bigger
+//http://docs.oracle.com/javafx/2/api/javafx/scene/shape/StrokeType.html#CENTERED
+//TODO rescale image?
+//TODO add jfx.jar to project folder
 
 public class designController {
 	@FXML private ToggleButton Rectangle, Ellipse, Line, Delete, Select, Fill, Text, Strokecolor, Strokewidth;
@@ -46,7 +49,7 @@ public class designController {
 	int selected;
 	ArrayList<MyNode> nodes = new ArrayList<MyNode>();
 	ArrayList<MyText> texts = new ArrayList<MyText>();
-	ArrayList<MyImage> images = new ArrayList<MyImage>();
+	ArrayList<Node> panes = new ArrayList<Node>(); //TODO make undo
 	int resizing = -1;
 	
 	private double x1;
@@ -67,6 +70,13 @@ public class designController {
 	               {
 					 	delete(selected);
 	               }
+				 if(event.getCode().equals(KeyCode.Z))
+				 {
+					 if(panes.size() > 0)
+					 {
+						 System.out.println("undo");
+					 }
+				 }
 			}
 		});
 	}
@@ -157,6 +167,8 @@ public class designController {
 			@Override
 			public void handle(MouseEvent event)
 			{	
+//				panes.add(DrawingPane.getChildren()); //make save of DrawingPane
+				
 				x1 = event.getX(); //mouse pressed x-coordinate
 				y1 = event.getY(); //mouse pressed y-coordinate
 				
@@ -176,7 +188,7 @@ public class designController {
 						resizing = isAnchor(event);
 						if(resizing == -1)
 						{
-							select(selected(event)); //TODO cannot select old shapes
+							select(selected(event));
 						}
 						break;
 					case "Delete":
@@ -228,62 +240,71 @@ public class designController {
 						{
 						Bounds b = ((MyShape)nodes.get(selected)).getShape().getBoundsInParent();
 						nodes.get(selected).erase();
+						
+						double delta_x = x2 - x1;
+						double delta_y = y2 - y1;
+						
+						double minX = Math.round(b.getMinX());
+						double minY = Math.round(b.getMinY());
+						double width = Math.round(b.getWidth());
+						double height = Math.round(b.getHeight());
+						
 						switch (resizing) {
 						case 1:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX() + (x2 - x1), 
-									b.getMinY(), 
-									b.getWidth() - (x2 - x1), 
-									b.getHeight());
+									minX + delta_x, 
+									minY, 
+									width - delta_x, 
+									height);
 							break;
 						case 2:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX() + (x2 - x1), 
-									b.getMinY(), 
-									b.getWidth() - (x2 - x1), 
-									b.getHeight() + (y2 - y1));
+									minX + delta_x, 
+									minY, 
+									width - delta_x, 
+									height + delta_y);
 							break;
 						case 3:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX(), 
-									b.getMinY() + (y2 - y1), 
-									b.getWidth(), 
-									b.getHeight() - (y2 - y1));
+									minX, 
+									minY + delta_y, 
+									width, 
+									height - delta_y);
 							break;
 						case 4:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX(), 
-									b.getMinY(), 
-									b.getWidth(), 
-									b.getHeight() + (y2 - y1));
+									minX, 
+									minY, 
+									width, 
+									height + delta_y);
 							break;
 						case 5:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX(), 
-									b.getMinY() + (y2 - y1), 
-									b.getWidth() + (x2 - x1), 
-									b.getHeight() - (y2 - y1));
+									minX, 
+									minY + delta_y, 
+									width + delta_x, 
+									height - delta_y);
 							break;
 						case 6:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX(), 
-									b.getMinY(), 
-									b.getWidth() + (x2 - x1), 
-									b.getHeight());
+									minX, 
+									minY, 
+									width + delta_x, 
+									height);
 							break;
 						case 7:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX(), 
-									b.getMinY(), 
-									b.getWidth() + (x2 - x1), 
-									b.getHeight() + (y2 - y1));
+									minX, 
+									minY, 
+									width + delta_x, 
+									height + delta_y);
 							break;
 						case 0:
 							((MyShape)nodes.get(selected)).resizeShape(	
-									b.getMinX() + (x2 - x1), 
-									b.getMinY() + (y2 - y1), 
-									b.getWidth() - (x2 - x1), 
-									b.getHeight() - (y2 - y1));
+									minX + delta_x, 
+									minY + delta_y, 
+									width - delta_x, 
+									height - delta_y);
 							break;
 						default:
 							break;
@@ -295,7 +316,7 @@ public class designController {
 						y1 = y2;
 						}
 					}
-					else
+					else if(selected >= 0)
 					{
 						nodes.get(selected).move((x2 - x1), (y2 - y1));
 						select(selected);
@@ -454,6 +475,10 @@ public class designController {
 		{
 			nodes.get(i).select();
 			selected = i;
+		}
+		if(i == -1)
+		{
+			selected = -1;
 		}
 	}
 	
