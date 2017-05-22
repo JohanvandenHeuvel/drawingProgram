@@ -7,12 +7,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -25,17 +27,16 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
-//TODO Fix Line
 //TODO Move Text
 //TODO Fix Text
 //TODO Add undo
 //TODO Add timer
 //TODO Big leds angle
 //TODO make double click not select box
-//TODO after setting stroke width moving makes the shape bigger -> set strokeWidth makes shape bigger
-//http://docs.oracle.com/javafx/2/api/javafx/scene/shape/StrokeType.html#CENTERED
 //TODO rescale image?
 //TODO add jfx.jar to project folder
+//TODO first time dragg doesnt start with pressed, gets consumed?
+//TODO look at shapes on top of each other
 
 public class designController {
 	@FXML private ToggleButton Rectangle, Ellipse, Line, Delete, Select, Fill, Text, Strokecolor, Strokewidth;
@@ -52,10 +53,10 @@ public class designController {
 	ArrayList<Node> panes = new ArrayList<Node>(); //TODO make undo
 	int resizing = -1;
 	
-	private double x1;
-	private double y1;
-	private double x2;
-	private double y2;
+	private double x1 = 0;
+	private double y1 = 0;
+	private double x2 = 0;
+	private double y2 = 0;
 	
 	
 	@FXML protected void keyPress()
@@ -115,47 +116,47 @@ public class designController {
 			@Override
 			public void handle(MouseEvent event)
 			{
-				if(event.getClickCount() == 2)
-				{
-					
-					for(Node n : DrawingPane.getChildren())
-					{
-						if(event.getTarget().equals(n) && n instanceof Text)
-						{
-							for(MyText t : texts)
-							{
-								if(t.getText().equals(n))
-								{
-									System.out.println("Test");
-									t.enableTextField();
-								}
-							}
-						}
-					}
-				}
-				/*
-				if(event.getClickCount() == 1)
-				{
-					for(Node n : DrawingPane.getChildren())
-					{
-						System.out.println(event.getTarget());
-						if(event.getTarget().equals(DrawingPane))
-						{
-							for(MyText t : texts)
-							{
-								t.disableTextField();
-							}
-						}
-						else if(event.getTarget().equals(n) && !(n instanceof TextField))
-						{
-							for(MyText t : texts)
-							{
-								t.disableTextField();
-							}
-						}
-					}
-				}
-				*/
+//				if(event.getClickCount() == 2)
+//				{
+//					
+//					for(Node n : DrawingPane.getChildren())
+//					{
+//						if(event.getTarget().equals(n) && n instanceof Text)
+//						{
+//							for(MyText t : texts)
+//							{
+//								if(t.getText().equals(n))
+//								{
+//									System.out.println("Test");
+//									t.enableTextField();
+//								}
+//							}
+//						}
+//					}
+//				}
+				
+//				if(event.getClickCount() == 1)
+//				{
+//					for(Node n : DrawingPane.getChildren())
+//					{
+//						System.out.println(event.getTarget());
+//						if(event.getTarget().equals(DrawingPane))
+//						{
+//							for(MyText t : texts)
+//							{
+//								t.disableTextField();
+//							}
+//						}
+//						else if(event.getTarget().equals(n) && !(n instanceof TextField))
+//						{
+//							for(MyText t : texts)
+//							{
+//								t.disableTextField();
+//							}
+//						}
+//					}
+//				}
+				
 			}
 		});
 	}
@@ -172,42 +173,44 @@ public class designController {
 				x1 = event.getX(); //mouse pressed x-coordinate
 				y1 = event.getY(); //mouse pressed y-coordinate
 				
-				switch (toggle_to_string()) {
-					case "Text":
-						texts.add(new MyText(x1, y1, DrawingPane));
-						break;
-					case "Line":
-					case "Rectangle":
-					case "Ellipse":
-						nodes.add(new MyShape(toggle_to_string(), DrawingPane));
-						nodes.get(nodes.size()-1).draw();
-						//select(shapes.indexOf(shapes.get(shapes.size()-1)));
-						selected = nodes.size()-1; //TODO 
-						break;
-					case "Select":
-						resizing = isAnchor(event);
-						if(resizing == -1)
-						{
-							select(selected(event));
-						}
-						break;
-					case "Delete":
-						delete(selected(event));
-						break;
-					case "Fill":
-					case "Strokecolor":
-						if(nodes.get(selected) instanceof MyShape)
-							((MyShape)nodes.get(selected(event))).manipulateShape(getColor(), toggle_to_string());
-						//shapes.get(selected(event)).manipulateShape(getColor(), toggle_to_string());
-						break;
-					case "Strokewidth":
-						if(nodes.get(selected) instanceof MyShape)
-							((MyShape)nodes.get(selected(event))).manipulateShape(getSlider());
-						//shapes.get(selected(event)).manipulateShape(getSlider());
-						break;
-					default:
-						break;
-				}
+				if(!(toggle_to_string() == null))
+					switch (toggle_to_string()) {
+						case "Text":
+							texts.add(new MyText(x1, y1, DrawingPane));
+							break;
+						case "Line":
+						case "Rectangle":
+						case "Ellipse":
+							nodes.add(new MyShape(toggle_to_string(), DrawingPane));
+							
+							nodes.get(nodes.size()-1).draw();
+							//select(shapes.indexOf(shapes.get(shapes.size()-1)));
+							selected = nodes.size()-1; //TODO 
+							break;
+						case "Select":
+							resizing = isAnchor(event);
+							if(resizing == -1)
+							{
+								select(selected(event));
+							}
+							break;
+						case "Delete":
+							delete(selected(event));
+							break;
+						case "Fill":
+						case "Strokecolor":
+							if(nodes.get(selected) instanceof MyShape)
+								((MyShape)nodes.get(selected(event))).manipulateShape(getColor(), toggle_to_string());
+							//shapes.get(selected(event)).manipulateShape(getColor(), toggle_to_string());
+							break;
+						case "Strokewidth":
+							if(nodes.get(selected) instanceof MyShape)
+								((MyShape)nodes.get(selected(event))).manipulateShape(getSlider());
+							//shapes.get(selected(event)).manipulateShape(getSlider());
+							break;
+						default:
+							break;
+					}
 			}
 			
 			
@@ -220,11 +223,13 @@ public class designController {
 				x2 = event.getX(); //mouse-dragged x-coordinate
 				y2 = event.getY(); //mouse-dragged y-coordinate
 				
+				
+				
 				if(Tools.getSelectedToggle() == Line
 				|| Tools.getSelectedToggle() == Rectangle
 				|| Tools.getSelectedToggle() == Ellipse)
 				{
-					if(selected >= 0 && nodes.get(selected) instanceof MyShape)
+					if(selected >= 0 && nodes.size() != 0 && nodes.get(selected) instanceof MyShape)
 					{
 						nodes.get(selected).erase();
 						((MyShape)nodes.get(selected)).dragShape(x1, y1, x2, y2);
@@ -318,6 +323,7 @@ public class designController {
 					}
 					else if(selected >= 0)
 					{
+						System.out.println(selected);
 						nodes.get(selected).move((x2 - x1), (y2 - y1));
 						select(selected);
 						nodes.get(selected).draw();
@@ -333,7 +339,7 @@ public class designController {
 			@Override
 			public void handle(MouseEvent event)
 			{	
-				
+				Tools.selectToggle(Select);
 			}
 		});
 	}
@@ -364,8 +370,12 @@ public class designController {
 	{
 		if(!event.getTarget().equals(DrawingPane))
 		{	
+			System.out.println(event.getTarget());
 			if(selected >= 0 && event.getTarget().equals(nodes.get(selected).getBox()))
+			{
 				return selected;
+			}
+				
 			else
 			{
 				for(int i = 0; i < nodes.size(); i++)
@@ -403,7 +413,7 @@ public class designController {
 	Cursor setCursor(MouseEvent event)
 	{
 		Shape temp = selectedShape(event);	
-		if(temp != null && selected >= 0 && nodes != null)
+		if(temp!= null && selected >= 0 && nodes != null)
 		{
 			if(nodes.get(selected) instanceof MyShape)
 			{
@@ -435,18 +445,15 @@ public class designController {
 					}
 				}
 			}
-			
+			if(temp.equals(nodes.get(selected).getShape()) && Tools.getSelectedToggle() == Select)
+			{
+				Image moveCursor = new Image("Cursor-Move-2-icon.png");
+				DrawingPane.getChildren().add(e)
+				return new ImageCursor(moveCursor,
+						moveCursor.getWidth() / 2,
+						moveCursor.getHeight() /2);
+			}
 		}
-		
-		/*
-		if(temp != null && temp.equals(SHAPE) && Tools.getSelectedToggle() == Select)
-		{
-			Image moveCursor = new Image("Cursor-Move-2-icon.png");
-			return new ImageCursor(moveCursor,
-					moveCursor.getWidth() / 2,
-					moveCursor.getHeight() /2);
-		}
-		*/
 		return Cursor.DEFAULT;
 	}
 	
