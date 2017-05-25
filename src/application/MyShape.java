@@ -96,7 +96,7 @@ public class MyShape implements MyNode {
 		double x2 = Math.round(b.getWidth());
 		double y2 = Math.round(b.getHeight());
 		
-		if(shape instanceof Line) //Line moving working sluggish
+		if(shape instanceof Line)
 		{
 			x2--;
 			y2--;
@@ -276,5 +276,15 @@ public class MyShape implements MyNode {
 
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
+	}
+	
+	public String getType()
+	{
+		return "Shape";
+	}
+	
+	public Bounds getBounds()
+	{
+		return shape.getBoundsInParent();
 	}
 }

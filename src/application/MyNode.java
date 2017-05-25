@@ -1,5 +1,6 @@
 package application;
 
+import javafx.geometry.Bounds;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -9,7 +10,8 @@ public interface MyNode {
 	public void unselect();
 	public Boolean getSelected();
 	public Rectangle getBox();
-	public Shape getShape();
+	public String getType();
 	public void draw();
 	public void erase();
+	public Bounds getBounds();
 }
