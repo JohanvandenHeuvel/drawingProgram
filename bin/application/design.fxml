@@ -6,6 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
 
 <BorderPane fx:id="borderPane" onKeyPressed="#keyPress" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.designController">
   <!-- TODO Add Nodes -->
@@ -78,16 +79,6 @@
                 </ImageView>
               </graphic>
             </ToggleButton>
-            <ToggleButton id="Text" fx:id="Strokewidth" mnemonicParsing="false" text="" toggleGroup="$Tools" GridPane.columnIndex="1" GridPane.rowIndex="3">
-              <graphic>
-                <ImageView fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                    <Image url="@../images/Editing-Line-Width-icon.png" />
-                  </image>
-                </ImageView>
-              </graphic>
-            </ToggleButton>
-            <ColorPicker fx:id="Colorpicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0001220703125" prefWidth="122.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ToggleButton fx:id="Text" mnemonicParsing="false" text="" toggleGroup="$Tools" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
               <graphic>
                 <ImageView fitHeight="100.0" fitWidth="100.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
@@ -97,7 +88,7 @@
                 </ImageView>
               </graphic>
             </ToggleButton>
-            <Button fx:id="Import" minHeight="100.0" minWidth="122.0" mnemonicParsing="false" onMouseClicked="#click_Import" prefHeight="100.0" prefWidth="122.0" text="" GridPane.columnIndex="0" GridPane.rowIndex="4">
+            <Button fx:id="Import" minHeight="100.0" minWidth="122.0" mnemonicParsing="false" onMouseClicked="#click_Import" prefHeight="100.0" prefWidth="122.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="3">
               <graphic>
                 <ImageView id="Import" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                   <image>
@@ -119,23 +110,49 @@
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           </rowConstraints>
           <VBox.margin>
-            <Insets bottom="50.0" left="20.0" right="20.0" top="110.0" />
+            <Insets bottom="50.0" left="20.0" right="20.0" top="10.0" />
           </VBox.margin>
         </GridPane>
-        <ToggleButton fx:id="Strokecolor" mnemonicParsing="false" prefWidth="-1.0" text="Strokecolor" toggleGroup="$Tools">
+        <Separator prefHeight="92.0" prefWidth="300.0">
           <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="60.0" />
+            <Insets top="50.0" />
           </VBox.margin>
-        </ToggleButton>
-        <Slider fx:id="SliderStrokewidth" prefWidth="-1.0">
+        </Separator>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="StrokeWidth">
           <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" fx:id="x2" />
+            <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
+          </VBox.margin>
+        </Text>
+        <Slider fx:id="SliderStrokewidth" prefWidth="122.0">
+          <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
           </VBox.margin>
         </Slider>
+        <GridPane alignment="CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="30.0" minHeight="-Infinity" opacity="1.0" prefHeight="-1.0" prefWidth="-1.0" vgap="30.0" visible="true">
+          <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="FillColor" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <ColorPicker id="Colorpicker" fx:id="FillColor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="122.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ColorPicker id="Colorpicker" fx:id="StrokeColor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="122.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+              <GridPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" fx:id="x2" />
+              </GridPane.margin>
+            </ColorPicker>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="StrokeColor" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="0" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          </columnConstraints>
+          <padding>
+            <Insets bottom="10.0" top="10.0" />
+          </padding>
+          <rowConstraints>
+            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+        </GridPane>
       </children>
       <BorderPane.margin>
         <Insets fx:id="x1" />
