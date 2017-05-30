@@ -1,6 +1,5 @@
 package application;
 
-import java.awt.print.Printable;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -30,12 +29,16 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 //#1
-//TODO Add timer
+//TODO mouse heatmap
+//TODO box select (delete)
+//TODO grey out when cant use
 
 //#2
 //TODO edit text
+//TODO double click on node not working
 
 //#3
+//TODO Add timer
 //TODO Add undo
 //TODO add jfx.jar to project folder
 //TODO first mouse press and key press do not work
@@ -134,13 +137,18 @@ public class designController {
 
 				// System.out.println("click");
 
-				if (event.getClickCount() == 2) {
+				if (event.getButton().equals(MouseButton.SECONDARY)) 
+				{
 
 					System.out.println("Double click");
 
-					for (MyNode node : nodes) {
-						if (node.getType().equals("Text") && event.getTarget().equals(((MyText) node).getText()))
-							((MyText) node).enableTextField();
+					for (int i = 0; i < nodes.size(); i++) {
+						System.out.print(event.getTarget() + " ");
+						System.out.print(((MyText) nodes.get(i)).getText());
+						System.out.println();
+						//&& event.getTarget().equals(((MyText) nodes.get(i)).getText())
+						if (nodes.get(i).getType().equals("Text") )
+							((MyText) nodes.get(i)).enableTextField();
 					}
 				}
 			}
