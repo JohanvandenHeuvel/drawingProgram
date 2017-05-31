@@ -28,6 +28,9 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
+//#Tryout
+//TODO all contextual menu's 
+
 //#1
 //TODO mouse heatmap
 //TODO box select (delete)
@@ -61,7 +64,7 @@ public class designController {
 	private Pane DrawingPane;
 
 	ArrayList<MyNode> nodes = new ArrayList<MyNode>();
-	ArrayList<Node> panes = new ArrayList<Node>(); // TODO make undo
+//	ArrayList<Node> panes = new ArrayList<Node>(); // TODO make undo
 
 	private int resizing = -1;
 	private int selected;
@@ -79,11 +82,11 @@ public class designController {
 				if (event.getCode().equals(KeyCode.DELETE)) {
 					delete(selected);
 				}
-				if (event.getCode().equals(KeyCode.Z)) {
-					if (panes.size() > 0) {
-						System.out.println("undo");
-					}
-				}
+//				if (event.getCode().equals(KeyCode.Z)) {
+//					if (panes.size() > 0) {
+//						System.out.println("undo");
+//					}
+//				}
 			}
 		});
 	}

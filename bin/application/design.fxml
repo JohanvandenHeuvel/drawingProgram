@@ -32,6 +32,9 @@
               <toggleGroup>
                 <ToggleGroup fx:id="Tools" />
               </toggleGroup>
+              <tooltip>
+                <Tooltip text="Draw a rectangle" />
+              </tooltip>
             </ToggleButton>
             <ToggleButton fx:id="Ellipse" minWidth="-1.0" mnemonicParsing="false" prefHeight="-1.0" prefWidth="-1.0" text="" toggleGroup="$Tools" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
               <graphic>
@@ -41,6 +44,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Draw an ellipse" />
+              </tooltip>
             </ToggleButton>
             <ToggleButton fx:id="Line" mnemonicParsing="false" prefWidth="-1.0" text="" toggleGroup="$Tools" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
               <graphic>
@@ -50,6 +56,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Draw a line" />
+              </tooltip>
             </ToggleButton>
             <ToggleButton fx:id="Delete" mnemonicParsing="false" prefWidth="-1.0" text="" toggleGroup="$Tools" visible="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
               <graphic>
@@ -59,6 +68,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Eraser" />
+              </tooltip>
             </ToggleButton>
             <ToggleButton fx:id="Select" minHeight="-1.0" mnemonicParsing="false" prefHeight="-1.0" prefWidth="-1.0" text="" toggleGroup="$Tools" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <graphic>
@@ -68,6 +80,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Select" />
+              </tooltip>
             </ToggleButton>
             <ToggleButton fx:id="Fill" mnemonicParsing="false" prefWidth="-1.0" text="" toggleGroup="$Tools" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <graphic>
@@ -77,6 +92,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Fill" />
+              </tooltip>
             </ToggleButton>
             <ToggleButton id="Text" fx:id="Strokewidth" mnemonicParsing="false" text="" toggleGroup="$Tools" GridPane.columnIndex="1" GridPane.rowIndex="3">
               <graphic>
@@ -86,6 +104,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Change stroke width" />
+              </tooltip>
             </ToggleButton>
             <ColorPicker fx:id="Colorpicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0001220703125" prefWidth="122.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ToggleButton fx:id="Text" mnemonicParsing="false" text="" toggleGroup="$Tools" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
@@ -96,6 +117,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Create text" />
+              </tooltip>
             </ToggleButton>
             <Button fx:id="Import" minHeight="100.0" minWidth="122.0" mnemonicParsing="false" onMouseClicked="#click_Import" prefHeight="100.0" prefWidth="122.0" text="" GridPane.columnIndex="0" GridPane.rowIndex="4">
               <graphic>
@@ -105,6 +129,9 @@
                   </image>
                 </ImageView>
               </graphic>
+              <tooltip>
+                <Tooltip text="Import an image" />
+              </tooltip>
             </Button>
           </children>
           <columnConstraints>
