@@ -3,6 +3,8 @@ package application;
 import java.awt.Point;
 
 import javafx.geometry.Bounds;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -22,6 +24,7 @@ public class MyShape implements MyNode {
 	private Rectangle box;
 	private Pane DrawingPane;
 	private Boolean selected = false;
+	private ContextMenu contextMenu = new ContextMenu();
 	
 	public MyShape(String shape_type, Pane DrawingPane) 
 	{
@@ -127,9 +130,8 @@ public class MyShape implements MyNode {
 		shape.setStrokeType(shape_settings.getStrokeType());
 		shape.setStrokeWidth(shape_settings.getStrokeWidth());
 		shape.setFill(shape_settings.getFill());
-		shape.setStroke(shape_settings.getStroke());
+		shape.setStroke(shape_settings.getStroke());		
 	}
-	
 	
 	private Circle[] addAnchors()
 	{
