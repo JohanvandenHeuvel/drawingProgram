@@ -35,10 +35,12 @@ public class MyShape implements MyNode {
 		shape_settings = shape;
 		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
 		if(shape_type != "Line")
+		{
 			shape_settings.setStrokeType(StrokeType.INSIDE);
-//		shape_settings.setFill(Color.TRANSPARENT);
-		shape_settings.setStrokeWidth(5);
-//		shape_settings.setStroke(Color.BLACK);
+			shape_settings.setFill(Color.TRANSPARENT);
+		}
+		shape_settings.setStrokeWidth(10);
+		shape_settings.setStroke(Color.BLACK);
 		//use settings
 	}
 	
@@ -55,6 +57,9 @@ public class MyShape implements MyNode {
 		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
 		if(shape_type != "Line")
 			shape_settings.setStrokeType(StrokeType.INSIDE);
+		if(shape_type == "Line")
+			if(strokeWidth < 10)
+				strokeWidth = 10.0;
 		shape_settings.setFill(color);
 		shape_settings.setStrokeWidth(strokeWidth);
 		shape_settings.setStroke(color);

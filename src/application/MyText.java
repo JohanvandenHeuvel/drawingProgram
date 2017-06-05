@@ -29,7 +29,6 @@ public class MyText implements MyNode{
 		textfield.setLayoutX(x1-1);
 		textfield.setLayoutY(y1-1);
 		DrawingPane.getChildren().add(textfield);
-		selected = true;
 		
 		textfield.setOnKeyPressed(new EventHandler<KeyEvent>() 
 		{
@@ -114,6 +113,7 @@ public class MyText implements MyNode{
 	
 	public void select()
 	{
+		
 		box = addBox();
 		
 		DrawingPane.getChildren().add(box);
@@ -143,7 +143,7 @@ public class MyText implements MyNode{
 	
 	public Rectangle getBox()
 	{
-		return null;
+		return box;
 	}
 	
 	public Boolean getSelected()

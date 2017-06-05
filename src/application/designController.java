@@ -32,22 +32,17 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
-//#Tryout
-//TODO all contextual menu's 
-
 //#1
 //TODO mouse heatmap
 //TODO box select (delete)
 //TODO grey out when cant use
 
 //#2
-//TODO edit text
 //TODO double click on node not working
 
 //#3
 //TODO Add timer
 //TODO Add undo
-//TODO add jfx.jar to project folder
 //TODO first mouse press and key press do not work
 //TODO look at shapes on top of each other
 
@@ -106,6 +101,7 @@ public class designController {
 		nodes.get(nodes.size() - 1).draw();
 		selected = nodes.size() - 1;
 		select(selected);
+		Tools.selectToggle(Select);
 	}
 
 	@FXML
@@ -170,6 +166,7 @@ public class designController {
 			MenuItem rectangle = new MenuItem("Rectangle");
 			MenuItem ellipse = new MenuItem("Ellipse");
 			MenuItem line = new MenuItem("Line");
+			
 			createShape.getItems().addAll(rectangle,ellipse,line);
 
 			rectangle.setOnAction((ActionEvent e) -> {
@@ -210,45 +207,60 @@ public class designController {
 			ContextMenu contextMenu = new ContextMenu();
 
 			MenuItem delete = new MenuItem("Delete");
-			
-			Menu edit = new Menu("Edit");
-			MenuItem fill = new MenuItem("Fill Color");
-			Menu stroke = new Menu("Stroke");
-			MenuItem strokeWidth = new MenuItem("Stroke Width");
-			MenuItem strokeColor = new MenuItem("Stroke Color");
-			MenuItem exit = new MenuItem("Exit");
-			
-			stroke.getItems().addAll(strokeWidth, strokeColor);
-			edit.getItems().addAll(fill,stroke);
-
 			delete.setOnAction((ActionEvent e) -> {
 				delete(target);
 			});
-
-			fill.setOnAction((ActionEvent e) -> {
-				if (target >= 0 && nodes.get(target) instanceof MyShape)
-					((MyShape) nodes.get(target)).manipulateShape(getColor(), "Fill");
-			});
 			
-			strokeColor.setOnAction((ActionEvent e) -> {
-				if (target >= 0 && nodes.get(target) instanceof MyShape)
-					((MyShape) nodes.get(target)).manipulateShape(getColor(), "Strokecolor");
-			});
-
-			strokeWidth.setOnAction((ActionEvent e) -> {
-				if (target >= 0 && nodes.get(target) instanceof MyShape)
-					((MyShape) nodes.get(target)).manipulateShape(getSlider());
-			});
-			
+			MenuItem exit = new MenuItem("Exit");
 			exit.setOnAction((ActionEvent e) -> {
 				contextMenu.hide();
 			});
 			
-//			if(nodes.get(target).getType() == "Text")
-//				b.setDisable(true);
+			if(nodes.get(target).getType() == "Text")
+			{
+				MenuItem edit = new MenuItem("Edit");
+				edit.setOnAction((ActionEvent e) -> {
+					((MyText) nodes.get(target)).enableTextField();
+				});
+				
+				contextMenu.getItems().addAll(delete, edit, exit);
+			}
+			else if(nodes.get(target).getType() == "Shape")
+			{	
+				ColorPicker colorsPickerFill = new ColorPicker();
+				ColorPicker colorsPickerStroke = new ColorPicker();
+				
+				MenuItem fill = new MenuItem("Fill Color", colorsPickerFill);
+				fill.setOnAction((ActionEvent e) -> {
+					if (target >= 0 && nodes.get(target) instanceof MyShape)
+						((MyShape) nodes.get(target)).manipulateShape(colorsPickerFill.getValue(), "Fill");
+				});
+				
+				MenuItem strokeColor = new MenuItem("Stroke Color", colorsPickerStroke);
+				strokeColor.setOnAction((ActionEvent e) -> {
+					if (target >= 0 && nodes.get(target) instanceof MyShape)
+						((MyShape) nodes.get(target)).manipulateShape(colorsPickerStroke.getValue(), "Strokecolor");
+				});
 
-			contextMenu.getItems().addAll(delete, edit, exit);
-
+				Slider slider = new Slider();
+				MenuItem strokeWidth = new MenuItem("Stroke Width", slider);
+				strokeWidth.setOnAction((ActionEvent e) -> {
+					if (target >= 0 && nodes.get(target) instanceof MyShape)
+						((MyShape) nodes.get(target)).manipulateShape(slider.getValue());
+				});
+				
+				Menu edit = new Menu("Edit");
+				edit.getItems().addAll(strokeWidth, strokeColor, fill);
+				
+				contextMenu.getItems().addAll(delete, edit, exit);
+			}
+			else
+			{
+				contextMenu.getItems().addAll(delete, exit);
+			}
+			
+			
+			
 			contextMenu.show(nodes.get(target).getBox(), event.getScreenX(), event.getSceneY());
 		}
 	}
@@ -262,7 +274,7 @@ public class designController {
 				y1 = event.getY(); // mouse pressed y-coordinate
 
 				int target = getTargetNode(event);
-
+				
 				if (event.getButton().equals(MouseButton.SECONDARY)) {
 					makeContextMenu(event);
 				} else {
@@ -277,7 +289,7 @@ public class designController {
 					case "Line":
 					case "Rectangle":
 					case "Ellipse":
-						nodes.add(new MyShape(toggle_to_string(), DrawingPane, getSlider(), getColor()));
+						nodes.add(new MyShape(toggle_to_string(), DrawingPane));
 						nodes.get(nodes.size() - 1).draw();
 						selected = nodes.size() - 1;
 						break;
@@ -351,8 +363,10 @@ public class designController {
 				// select();
 				// DrawingPane.getChildren().remove(selectionBox);
 				// }
-				if (toggle_to_string() == "Line" || toggle_to_string() == "Rectangle"
-						|| toggle_to_string() == "Ellipse") {
+				if (toggle_to_string() == "Line" 
+						|| toggle_to_string() == "Rectangle"
+						|| toggle_to_string() == "Ellipse"
+						|| toggle_to_string() == "Text") {
 					Tools.selectToggle(Select);
 				}
 			}
@@ -379,9 +393,7 @@ public class designController {
 		double heightwidthCorrection = 0;
 		
 		if(((MyShape) nodes.get(selected)).getShape() instanceof Line)
-		{
-			System.out.println("Line");
-			
+		{			
 			xyCorrection = ((MyShape) nodes.get(selected)).getShape().getStrokeWidth()/2;
 			heightwidthCorrection = ((MyShape) nodes.get(selected)).getShape().getStrokeWidth()-1;
 		}
