@@ -19,7 +19,7 @@
     </Pane>
   </center>
   <left>
-    <VBox disable="false" focusTraversable="false" maxHeight="-Infinity" maxWidth="-1.0" minWidth="-1.0" prefHeight="100.0" prefWidth="300.0" rotate="0.0" BorderPane.alignment="TOP_LEFT">
+    <VBox disable="false" fillWidth="true" focusTraversable="false" maxHeight="-Infinity" maxWidth="-1.0" minWidth="-1.0" prefHeight="0.0" prefWidth="0.0" rotate="0.0" visible="false" BorderPane.alignment="TOP_LEFT">
       <children>
         <GridPane alignment="CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="30.0" minHeight="-Infinity" opacity="1.0" prefHeight="400.0" prefWidth="600.0" vgap="110.0" visible="true" VBox.vgrow="NEVER">
           <children>
@@ -170,7 +170,7 @@
         <GridPane hgap="30.0" vgap="40.0" VBox.margin="$x2">
           <children>
             <ColorPicker fx:id="Colorpicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="122.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <Slider fx:id="SliderStrokewidth" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" prefWidth="-1.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Slider fx:id="SliderStrokewidth" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" prefWidth="-1.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label alignment="CENTER" prefWidth="115.0" text="Select color" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0">
               <font>
                 <Font size="15.0" fx:id="x3" />
