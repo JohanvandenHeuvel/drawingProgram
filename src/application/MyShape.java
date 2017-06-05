@@ -3,8 +3,6 @@ package application;
 import java.awt.Point;
 
 import javafx.geometry.Bounds;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -24,7 +22,6 @@ public class MyShape implements MyNode {
 	private Rectangle box;
 	private Pane DrawingPane;
 	private Boolean selected = false;
-	private ContextMenu contextMenu = new ContextMenu();
 	
 	public MyShape(String shape_type, Pane DrawingPane) 
 	{
@@ -39,7 +36,29 @@ public class MyShape implements MyNode {
 		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
 		if(shape_type != "Line")
 			shape_settings.setStrokeType(StrokeType.INSIDE);
+//		shape_settings.setFill(Color.TRANSPARENT);
+		shape_settings.setStrokeWidth(5);
+//		shape_settings.setStroke(Color.BLACK);
 		//use settings
+	}
+	
+	public MyShape(String shape_type, Pane DrawingPane, Double strokeWidth, Color color)
+	{
+		if(shape_type == "Line")
+			shape = new Line();
+		if(shape_type == "Rectangle")
+			shape = new Rectangle(); 
+		if(shape_type == "Ellipse")
+			shape = new Ellipse();  
+		this.DrawingPane = DrawingPane;
+		shape_settings = shape;
+		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
+		if(shape_type != "Line")
+			shape_settings.setStrokeType(StrokeType.INSIDE);
+		shape_settings.setFill(color);
+		shape_settings.setStrokeWidth(strokeWidth);
+		shape_settings.setStroke(color);
+		setSettings();
 	}
 	
 	public MyShape(double x1, double y1, double x2, double y2, String shape_type, Pane DrawingPane)
@@ -55,11 +74,14 @@ public class MyShape implements MyNode {
 		shape_settings.setStrokeLineCap(StrokeLineCap.BUTT);
 		if(shape_type != "Line")
 			shape_settings.setStrokeType(StrokeType.INSIDE);
+//		shape_settings.setFill(Color.TRANSPARENT);
+		shape_settings.setStrokeWidth(5);
+//		shape_settings.setStroke(Color.BLACK);
 		//use settings
 	}
 	
 	public void dragShape(double x1, double y1, double x2, double y2)
-	{
+	{	
 		if(shape instanceof Line)
 			shape = new Line(x1, y1, x2, y2);
 		if(shape instanceof Rectangle)
@@ -73,6 +95,8 @@ public class MyShape implements MyNode {
 	{
 		if(shape instanceof Line)
 		{
+			
+			
 			if(((Line) shape).getStartY() > ((Line) shape).getEndY())
 			{	
 				shape = new Line(x1, y1+(--y2),x1+(--x2),y1);
@@ -93,11 +117,20 @@ public class MyShape implements MyNode {
 	{
 		Bounds b = shape.getBoundsInParent();
 		
-		double x1 = b.getMinX() + delta_x;
-		double y1 = b.getMinY() + delta_y; 
+		double xyCorrection = 0;
+		double heightwidthCorrection = 0;
 		
-		double x2 = Math.round(b.getWidth());
-		double y2 = Math.round(b.getHeight());
+		if(shape instanceof Line)
+		{
+			xyCorrection = shape.getStrokeWidth()/2;
+			heightwidthCorrection = shape.getStrokeWidth()-1;
+		}
+		
+		double x1 = (b.getMinX() + xyCorrection) + delta_x;
+		double y1 = (b.getMinY() + xyCorrection) + delta_y; 
+		
+		double x2 = Math.round(b.getWidth()) - heightwidthCorrection;
+		double y2 = Math.round(b.getHeight()) - heightwidthCorrection;
 		
 		if(shape instanceof Line)
 		{

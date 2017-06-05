@@ -27,6 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -122,7 +123,6 @@ public class designController {
 		DrawingPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-
 				// Circle circle = new Circle(100,100,50);
 				//
 				// circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -162,14 +162,14 @@ public class designController {
 		if(event.getTarget().equals(DrawingPane))
 		{
 			ContextMenu contextMenu = new ContextMenu();
-
+			MenuItem text = new MenuItem("Text");
+			MenuItem image = new MenuItem("Import image");
+			MenuItem exit = new MenuItem("Exit");
+			
+			Menu createShape = new Menu("Create shape");
 			MenuItem rectangle = new MenuItem("Rectangle");
 			MenuItem ellipse = new MenuItem("Ellipse");
 			MenuItem line = new MenuItem("Line");
-			MenuItem text = new MenuItem("Text");
-			MenuItem image = new MenuItem("Import image");
-			
-			Menu createShape = new Menu("Create shape");
 			createShape.getItems().addAll(rectangle,ellipse,line);
 
 			rectangle.setOnAction((ActionEvent e) -> {
@@ -191,37 +191,63 @@ public class designController {
 			image.setOnAction((ActionEvent e) -> {
 				click_Import();
 			});
-
-			contextMenu.getItems().addAll(createShape, text, image);
+			
+			exit.setOnAction((ActionEvent e) -> {
+				contextMenu.hide();
+			});
+			
+			contextMenu.getItems().addAll(createShape, text, image, exit);
 
 			contextMenu.show(DrawingPane, event.getScreenX(), event.getSceneY());
 		}
 		else
 		{
 			int target = getTargetNode(event);
+			
+			if(!nodes.get(target).getSelected())
+				select(target);
 
 			ContextMenu contextMenu = new ContextMenu();
 
-			MenuItem a = new MenuItem("Delete");
-			MenuItem b = new MenuItem("Edit");
-			MenuItem c = new MenuItem("C");
+			MenuItem delete = new MenuItem("Delete");
+			
+			Menu edit = new Menu("Edit");
+			MenuItem fill = new MenuItem("Fill Color");
+			Menu stroke = new Menu("Stroke");
+			MenuItem strokeWidth = new MenuItem("Stroke Width");
+			MenuItem strokeColor = new MenuItem("Stroke Color");
+			MenuItem exit = new MenuItem("Exit");
+			
+			stroke.getItems().addAll(strokeWidth, strokeColor);
+			edit.getItems().addAll(fill,stroke);
 
-			a.setOnAction((ActionEvent e) -> {
+			delete.setOnAction((ActionEvent e) -> {
 				delete(target);
 			});
 
-			b.setOnAction((ActionEvent e) -> {
-				System.out.println("B");
-			});
-
-			c.setOnAction((ActionEvent e) -> {
-				System.out.println("C");
+			fill.setOnAction((ActionEvent e) -> {
+				if (target >= 0 && nodes.get(target) instanceof MyShape)
+					((MyShape) nodes.get(target)).manipulateShape(getColor(), "Fill");
 			});
 			
-			if(nodes.get(target).getType() == "Text")
-				b.setDisable(true);
+			strokeColor.setOnAction((ActionEvent e) -> {
+				if (target >= 0 && nodes.get(target) instanceof MyShape)
+					((MyShape) nodes.get(target)).manipulateShape(getColor(), "Strokecolor");
+			});
 
-			contextMenu.getItems().addAll(a, b, c);
+			strokeWidth.setOnAction((ActionEvent e) -> {
+				if (target >= 0 && nodes.get(target) instanceof MyShape)
+					((MyShape) nodes.get(target)).manipulateShape(getSlider());
+			});
+			
+			exit.setOnAction((ActionEvent e) -> {
+				contextMenu.hide();
+			});
+			
+//			if(nodes.get(target).getType() == "Text")
+//				b.setDisable(true);
+
+			contextMenu.getItems().addAll(delete, edit, exit);
 
 			contextMenu.show(nodes.get(target).getBox(), event.getScreenX(), event.getSceneY());
 		}
@@ -251,7 +277,7 @@ public class designController {
 					case "Line":
 					case "Rectangle":
 					case "Ellipse":
-						nodes.add(new MyShape(toggle_to_string(), DrawingPane));
+						nodes.add(new MyShape(toggle_to_string(), DrawingPane, getSlider(), getColor()));
 						nodes.get(nodes.size() - 1).draw();
 						selected = nodes.size() - 1;
 						break;
@@ -348,15 +374,26 @@ public class designController {
 	public void resizingShape() {
 		Bounds b = ((MyShape) nodes.get(selected)).getShape().getBoundsInParent();
 		nodes.get(selected).erase();
-
+		
+		double xyCorrection = 0;
+		double heightwidthCorrection = 0;
+		
+		if(((MyShape) nodes.get(selected)).getShape() instanceof Line)
+		{
+			System.out.println("Line");
+			
+			xyCorrection = ((MyShape) nodes.get(selected)).getShape().getStrokeWidth()/2;
+			heightwidthCorrection = ((MyShape) nodes.get(selected)).getShape().getStrokeWidth()-1;
+		}
+		
 		double delta_x = x2 - x1;
 		double delta_y = y2 - y1;
 
-		double minX = Math.round(b.getMinX());
-		double minY = Math.round(b.getMinY());
-		double width = Math.round(b.getWidth());
-		double height = Math.round(b.getHeight());
-
+		double minX = Math.round(b.getMinX()) + xyCorrection;
+		double minY = Math.round(b.getMinY()) + xyCorrection;
+		double width = Math.round(b.getWidth()) - heightwidthCorrection;
+		double height = Math.round(b.getHeight()) - heightwidthCorrection;
+		
 		switch (resizing) {
 		case 1:
 			((MyShape) nodes.get(selected)).resizeShape(minX + delta_x, minY, width - delta_x, height);

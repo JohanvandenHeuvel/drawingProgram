@@ -17,6 +17,10 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+//			scene.getRoot().setVisible(true);
+//			scene.getRoot().setFocusTraversable(false);
+//			scene.getRoot().toFront();
 			scene.getRoot().requestFocus();
 		} catch(Exception e) {
 			e.printStackTrace();
