@@ -6,8 +6,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.*?>
 
 <BorderPane fx:id="borderPane" onKeyPressed="#keyPress" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.designController">
   <!-- TODO Add Nodes -->
@@ -169,8 +169,8 @@
         </Separator>
         <GridPane hgap="30.0" vgap="40.0" VBox.margin="$x2">
           <children>
-            <ColorPicker fx:id="Colorpicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="122.0" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <Slider fx:id="SliderStrokewidth" prefWidth="-1.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ColorPicker fx:id="Colorpicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="122.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Slider fx:id="SliderStrokewidth" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" prefWidth="-1.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label alignment="CENTER" prefWidth="115.0" text="Select color" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0">
               <font>
                 <Font size="15.0" fx:id="x3" />

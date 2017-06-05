@@ -3,6 +3,8 @@ package application;
 import java.io.File;
 import java.util.ArrayList;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -227,8 +229,9 @@ public class designController {
 			}
 			else if(nodes.get(target).getType() == "Shape")
 			{	
-				ColorPicker colorsPickerFill = new ColorPicker();
-				ColorPicker colorsPickerStroke = new ColorPicker();
+				ColorPicker colorsPickerFill = new ColorPicker((Color)(((MyShape)nodes.get(target)).getShape().getFill()));
+				ColorPicker colorsPickerStroke = new ColorPicker((Color)(((MyShape)nodes.get(target)).getShape().getStroke()));
+				
 				
 				MenuItem fill = new MenuItem("Fill Color", colorsPickerFill);
 				fill.setOnAction((ActionEvent e) -> {
@@ -242,15 +245,34 @@ public class designController {
 						((MyShape) nodes.get(target)).manipulateShape(colorsPickerStroke.getValue(), "Strokecolor");
 				});
 
-				Slider slider = new Slider();
+				
+				
+				Slider slider = new Slider(1,10,((MyShape)nodes.get(target)).getShape().getStrokeWidth());
+				slider.setShowTickMarks(true);
+				slider.setShowTickLabels(true);
+				slider.setSnapToTicks(true);
+				slider.setMajorTickUnit(1f);
+				slider.setMinorTickCount(0);
+				slider.setBlockIncrement(1f);
+				
 				MenuItem strokeWidth = new MenuItem("Stroke Width", slider);
-				strokeWidth.setOnAction((ActionEvent e) -> {
-					if (target >= 0 && nodes.get(target) instanceof MyShape)
-						((MyShape) nodes.get(target)).manipulateShape(slider.getValue());
-				});
+				
+				slider.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
+				    @Override
+				    public void changed(ObservableValue<? extends Boolean> obs, Boolean wasChanging, Boolean isNowChanging) {
+				    	if (target >= 0 && nodes.get(target) instanceof MyShape)
+							((MyShape) nodes.get(target)).manipulateShape(slider.getValue());
+				        }
+				    }
+				);
 				
 				Menu edit = new Menu("Edit");
 				edit.getItems().addAll(strokeWidth, strokeColor, fill);
+				
+				if(((MyShape)nodes.get(target)).getShape() instanceof Line)
+				{
+					fill.setDisable(true);
+				}
 				
 				contextMenu.getItems().addAll(delete, edit, exit);
 			}
