@@ -162,6 +162,16 @@ public class MyShape implements MyNode {
 		//draw();
 	}
 	
+	public void toFront()
+	{
+		shape.toFront();
+	}
+	
+	public void toBack()
+	{
+		shape.toBack();
+	}
+	
 	private void setSettings()
 	{
 		shape.setStrokeLineCap(StrokeLineCap.BUTT);

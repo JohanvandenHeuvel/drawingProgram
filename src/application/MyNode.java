@@ -14,4 +14,6 @@ public interface MyNode {
 	public void draw();
 	public void erase();
 	public Bounds getBounds();
+	public void toFront();
+	public void toBack();
 }

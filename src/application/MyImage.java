@@ -84,6 +84,16 @@ public class MyImage implements MyNode{
 		return anchor;
 	}
 	
+	public void toFront()
+	{
+		image.toFront();
+	}
+	
+	public void toBack()
+	{
+		image.toFront();
+	}
+	
 	public void select()
 	{
 		box = addBox();

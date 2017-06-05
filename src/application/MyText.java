@@ -121,6 +121,16 @@ public class MyText implements MyNode{
 		setSelected(true);
 	}
 	
+	public void toFront()
+	{
+		text.toFront();
+	}
+	
+	public void toBack()
+	{
+		text.toBack();
+	}
+	
 	public void unselect()
 	{
 		

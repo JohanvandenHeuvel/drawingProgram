@@ -3,6 +3,8 @@ package application;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.sun.media.jfxmedia.effects.AudioEqualizer;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -217,6 +219,20 @@ public class designController {
 			exit.setOnAction((ActionEvent e) -> {
 				contextMenu.hide();
 			});
+			
+			
+//			MenuItem toFront = new MenuItem("To Front");
+//			toFront.setOnAction((ActionEvente) -> {
+//				nodes.get(target).toBack();
+//			});
+//			
+//			MenuItem toBack = new MenuItem("To Back");
+//			toFront.setOnAction((ActionEvente) -> {
+//				nodes.get(target).toFront();
+//			});
+//			
+//			Menu allign = new Menu("Allign");
+//			allign.getItems().addAll(toFront,toBack);
 			
 			if(nodes.get(target).getType() == "Text")
 			{
