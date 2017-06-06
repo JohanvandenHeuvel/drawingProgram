@@ -229,18 +229,10 @@ public class designController {
 				contextMenu.hide();
 			});
 
-			// MenuItem toFront = new MenuItem("To Front");
-			// toFront.setOnAction((ActionEvente) -> {
-			// nodes.get(target).toBack();
-			// });
-			//
-			// MenuItem toBack = new MenuItem("To Back");
-			// toFront.setOnAction((ActionEvente) -> {
-			// nodes.get(target).toFront();
-			// });
-			//
-			// Menu allign = new Menu("Allign");
-			// allign.getItems().addAll(toFront,toBack);
+			MenuItem toBack = new MenuItem("To Back");
+			toBack.setOnAction((ActionEvente) -> {
+				nodes.get(target).toBack();
+			});
 
 			ColorPicker colorsPickerFill = new ColorPicker();
 			MenuItem fill = new MenuItem("Fill Color", colorsPickerFill);
@@ -304,7 +296,7 @@ public class designController {
 				edit.setDisable(true);
 			}
 
-			contextMenu.getItems().addAll(delete, edit, exit);
+			contextMenu.getItems().addAll(delete, edit, toBack, exit);
 			contextMenu.show(nodes.get(target).getBox().getParent(), event.getScreenX(), event.getSceneY());
 
 		}
@@ -416,18 +408,18 @@ public class designController {
 						|| toggle_to_string() == "Text") {
 					Tools.selectToggle(Select);
 				}
-//				for (MyNode n : nodes) {
-//					if (n.getType().equals("Shape")) {
-//						((MyShape) n).getShape().setFocusTraversable(false);
-//					}
-//					if (n.getType().equals("Text")) {
-//						((MyText) n).getText().setFocusTraversable(false);
-//					}
-//					if (n.getType().equals("Image")) {
-//						((MyImage) n).getImage().setFocusTraversable(false);
-//					}
-//
-//				}
+				// for (MyNode n : nodes) {
+				// if (n.getType().equals("Shape")) {
+				// ((MyShape) n).getShape().setFocusTraversable(false);
+				// }
+				// if (n.getType().equals("Text")) {
+				// ((MyText) n).getText().setFocusTraversable(false);
+				// }
+				// if (n.getType().equals("Image")) {
+				// ((MyImage) n).getImage().setFocusTraversable(false);
+				// }
+				//
+				// }
 				DrawingPane.getScene().getRoot().requestFocus();
 			}
 		});
