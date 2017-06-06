@@ -3,8 +3,6 @@ package application;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.sun.media.jfxmedia.effects.AudioEqualizer;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -67,7 +65,7 @@ public class designController {
 	private Pane DrawingPane;
 
 	ArrayList<MyNode> nodes = new ArrayList<MyNode>();
-	// ContextMenu contextMenu;
+	ContextMenu contextMenu;
 	// Rectangle selectionBox;
 	// ArrayList<Node> panes = new ArrayList<Node>(); // TODO make undo
 
@@ -84,6 +82,8 @@ public class designController {
 		borderPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
+				System.out.println(event);
+
 				if (event.getCode().equals(KeyCode.D)) {
 					delete(selected);
 				}
@@ -170,7 +170,8 @@ public class designController {
 	public void makeContextMenu(MouseEvent event) {
 
 		if (event.getTarget().equals(DrawingPane)) {
-			ContextMenu contextMenu = new ContextMenu();
+
+			contextMenu = new ContextMenu();
 			MenuItem text = new MenuItem("Text (t)");
 			MenuItem image = new MenuItem("Import image (i)");
 			MenuItem exit = new MenuItem("Exit");
@@ -215,7 +216,8 @@ public class designController {
 			if (!nodes.get(target).getSelected())
 				select(target);
 
-			ContextMenu contextMenu = new ContextMenu();
+			contextMenu = new ContextMenu();
+			contextMenu.setAutoHide(true);
 
 			MenuItem delete = new MenuItem("Delete (d)");
 			delete.setOnAction((ActionEvent e) -> {
@@ -303,7 +305,7 @@ public class designController {
 			}
 
 			contextMenu.getItems().addAll(delete, edit, exit);
-			contextMenu.show(nodes.get(target).getBox(), event.getScreenX(), event.getSceneY());
+			contextMenu.show(nodes.get(target).getBox().getParent(), event.getScreenX(), event.getSceneY());
 
 		}
 
@@ -316,6 +318,9 @@ public class designController {
 			public void handle(MouseEvent event) {
 				x1 = event.getX(); // mouse pressed x-coordinate
 				y1 = event.getY(); // mouse pressed y-coordinate
+
+				if (contextMenu != null)
+					contextMenu.hide();
 
 				int target = getTargetNode(event);
 
@@ -411,6 +416,19 @@ public class designController {
 						|| toggle_to_string() == "Text") {
 					Tools.selectToggle(Select);
 				}
+//				for (MyNode n : nodes) {
+//					if (n.getType().equals("Shape")) {
+//						((MyShape) n).getShape().setFocusTraversable(false);
+//					}
+//					if (n.getType().equals("Text")) {
+//						((MyText) n).getText().setFocusTraversable(false);
+//					}
+//					if (n.getType().equals("Image")) {
+//						((MyImage) n).getImage().setFocusTraversable(false);
+//					}
+//
+//				}
+				DrawingPane.getScene().getRoot().requestFocus();
 			}
 		});
 	}

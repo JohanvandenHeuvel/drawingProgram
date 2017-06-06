@@ -12,50 +12,44 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class MyText implements MyNode{
+public class MyText implements MyNode {
 	private TextField textfield;
 	private Text text;
 	private Pane DrawingPane;
 	private Boolean selected = false;
 	private Boolean textFieldDisabled;
 	private Rectangle box;
-	
-	public MyText(double x1, double y1, Pane DrawingPane)
-	{
+
+	public MyText(double x1, double y1, Pane DrawingPane) {
 		this.DrawingPane = DrawingPane;
-		
+
 		textFieldDisabled = false;
 		textfield = new TextField("Enter text here");
-		textfield.setLayoutX(x1-1);
-		textfield.setLayoutY(y1-1);
+		textfield.setLayoutX(x1 - 1);
+		textfield.setLayoutY(y1 - 1);
 		DrawingPane.getChildren().add(textfield);
-		
-		textfield.setOnKeyPressed(new EventHandler<KeyEvent>() 
-		{
+
+		textfield.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
-               if(event.getCode().equals(KeyCode.ENTER))
-               {
-            	   disableTextField();
-               }
+				if (event.getCode().equals(KeyCode.ENTER)) {
+					disableTextField();
+				}
 			}
 		});
 	}
-	
-	public void disableTextField()
-	{
-		if(!textFieldDisabled)
-		{
+
+	public void disableTextField() {
+		if (!textFieldDisabled) {
 			textFieldDisabled = true;
 			setText(new Text(textfield.getLayoutX(), textfield.getLayoutY(), textfield.getText()));
 			DrawingPane.getChildren().remove(textfield);
-	 	   	DrawingPane.getChildren().add(getText());
+			DrawingPane.getChildren().add(getText());
+			text.setFocusTraversable(false);
 		}
 	}
-	
-	public void enableTextField()
-	{
-		if(textFieldDisabled)
-		{
+
+	public void enableTextField() {
+		if (textFieldDisabled) {
 			textFieldDisabled = false;
 			textfield = new TextField(getText().getText());
 			textfield.setLayoutX(getText().getX());
@@ -63,44 +57,38 @@ public class MyText implements MyNode{
 			DrawingPane.getChildren().remove(getText());
 			DrawingPane.getChildren().add(textfield);
 			selected = true;
-			
-			textfield.setOnKeyPressed(new EventHandler<KeyEvent>() 
-			{
+
+			textfield.setOnKeyPressed(new EventHandler<KeyEvent>() {
 				public void handle(KeyEvent event) {
-	               if(event.getCode().equals(KeyCode.ENTER))
-	               {
-	            	   disableTextField();
-	               }
+					if (event.getCode().equals(KeyCode.ENTER)) {
+						disableTextField();
+					}
 				}
 			});
 		}
-		
+
 	}
-	
-	public void move(double delta_X, double delta_Y)
-	{
-		
+
+	public void move(double delta_X, double delta_Y) {
+
 		erase();
-		
+
 		text.setX(text.getX() + delta_X);
 		text.setY(text.getY() + delta_Y);
-		
-		//draw();
-		
+
+		// draw();
+
 	}
-	
-	public void draw()
-	{
+
+	public void draw() {
 		DrawingPane.getChildren().add((textFieldDisabled) ? text : textfield);
 	}
-	
-	public void erase()
-	{
+
+	public void erase() {
 		DrawingPane.getChildren().remove((textFieldDisabled) ? text : textfield);
 	}
-	
-	private Rectangle addBox()
-	{	
+
+	private Rectangle addBox() {
 		Bounds bounds = text.getBoundsInParent();
 		Rectangle box = new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
 		box.setFill(Color.TRANSPARENT);
@@ -110,35 +98,31 @@ public class MyText implements MyNode{
 		box.getStrokeDashArray().addAll(25d, 20d, 5d, 20d);
 		return box;
 	}
-	
-	public void select()
-	{
-		
+
+	public void select() {
+
 		box = addBox();
-		
+
 		DrawingPane.getChildren().add(box);
-		
+
 		setSelected(true);
 	}
-	
-	public void toFront()
-	{
+
+	public void toFront() {
 		text.toFront();
 	}
-	
-	public void toBack()
-	{
+
+	public void toBack() {
 		text.toBack();
 	}
-	
-	public void unselect()
-	{
-		
+
+	public void unselect() {
+
 		DrawingPane.getChildren().remove(box);
 		disableTextField();
 		setSelected(false);
 	}
-	
+
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
 	}
@@ -150,24 +134,20 @@ public class MyText implements MyNode{
 	public void setText(Text text) {
 		this.text = text;
 	}
-	
-	public Rectangle getBox()
-	{
+
+	public Rectangle getBox() {
 		return box;
 	}
-	
-	public Boolean getSelected()
-	{
+
+	public Boolean getSelected() {
 		return selected;
 	}
-	
-	public String getType()
-	{
+
+	public String getType() {
 		return "Text";
 	}
-	
-	public Bounds getBounds()
-	{
+
+	public Bounds getBounds() {
 		return text.getBoundsInParent();
 	}
 }
