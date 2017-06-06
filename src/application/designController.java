@@ -84,12 +84,9 @@ public class designController {
 		borderPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				if (selected >= 0) {
-					if (event.getCode().equals(KeyCode.DELETE)) {
-						delete(selected);
-					}
+				if (event.getCode().equals(KeyCode.D)) {
+					delete(selected);
 				}
-
 				if (event.getCode().equals(KeyCode.R)) {
 					Tools.selectToggle(Rectangle);
 				}
@@ -220,7 +217,7 @@ public class designController {
 
 			ContextMenu contextMenu = new ContextMenu();
 
-			MenuItem delete = new MenuItem("Delete (delete)");
+			MenuItem delete = new MenuItem("Delete (d)");
 			delete.setOnAction((ActionEvent e) -> {
 				delete(target);
 			});
