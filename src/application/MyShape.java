@@ -2,6 +2,8 @@ package application;
 
 import java.awt.Point;
 
+import application.LineOrientation;
+
 import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -22,6 +24,8 @@ public class MyShape implements MyNode {
 	private Rectangle box;
 	private Pane DrawingPane;
 	private Boolean selected = false;
+	
+	private LineOrientation orientation;
 	
 	public MyShape(String shape_type, Pane DrawingPane) 
 	{
@@ -107,7 +111,15 @@ public class MyShape implements MyNode {
 			shape = new Ellipse(centerX, centerY, radiusX, radiusY);
 //			shape = new Ellipse(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));
 		}
-			
+		
+		if (shape instanceof Line)
+		{
+			if(x1 < x2 && y1 < y2
+					|| x1 > x2 && y1 > y2)
+				orientation = LineOrientation.UpperLeft2LowerRight;
+			else
+				orientation = LineOrientation.LowerLeft2UpperRight;
+		}
 		setSettings();
 	}
 	
@@ -115,13 +127,13 @@ public class MyShape implements MyNode {
 	{
 		if(shape instanceof Line)
 		{
+			System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
 			
-			
-			if(((Line) shape).getStartY() > ((Line) shape).getEndY())
+			if(orientation == LineOrientation.LowerLeft2UpperRight)
 			{	
 				shape = new Line(x1, y1+(--y2),x1+(--x2),y1);
 			}
-			else
+			if(orientation == LineOrientation.UpperLeft2LowerRight)
 			{
 				shape = new Line(x1, y1,x1+(--x2),y1+(--y2));
 			}
@@ -157,7 +169,7 @@ public class MyShape implements MyNode {
 			x2--;
 			y2--;
 
-			if(((Line) shape).getStartY() > ((Line) shape).getEndY())
+			if(orientation == LineOrientation.LowerLeft2UpperRight)
 			{	
 				y1 = y1 + y2;
 				y2 = -y2;
@@ -210,13 +222,18 @@ public class MyShape implements MyNode {
 		if(shape instanceof Line)
 		{
 			//if line lower-left to upper-right
-			if(((Line) shape).getStartY() > ((Line) shape).getEndY()
-					&& ((Line) shape).getStartX() < ((Line) shape).getEndX())
+//			if(((Line) shape).getStartY() > ((Line) shape).getEndY()
+//					&& ((Line) shape).getStartX() < ((Line) shape).getEndX())
+//			{	
+//				positions[2] = new Point(x, y+height);
+//				positions[5] = new Point(x+width,y);
+//			}
+			if(orientation == LineOrientation.LowerLeft2UpperRight)
 			{	
 				positions[2] = new Point(x, y+height);
 				positions[5] = new Point(x+width,y);
 			}
-			else
+			if(orientation == LineOrientation.UpperLeft2LowerRight)
 			{
 				positions[0] = new Point(x, y);
 				positions[7] = new Point(x+width,y+height);
@@ -262,6 +279,11 @@ public class MyShape implements MyNode {
 		DrawingPane.getChildren().removeAll(anchors);
 		
 		setSelected(false);
+	}
+	
+	public void changeOrientation()
+	{
+		orientation = (orientation == LineOrientation.UpperLeft2LowerRight) ? LineOrientation.LowerLeft2UpperRight : LineOrientation.UpperLeft2LowerRight;
 	}
 	
 	private Rectangle addBox()

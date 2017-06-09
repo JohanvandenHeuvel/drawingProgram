@@ -24,7 +24,7 @@ public class MyText implements MyNode {
 		this.DrawingPane = DrawingPane;
 
 		textFieldDisabled = false;
-		textfield = new TextField("Enter text here");
+		textfield = new TextField();
 		textfield.setLayoutX(x1 - 1);
 		textfield.setLayoutY(y1 - 1);
 		DrawingPane.getChildren().add(textfield);

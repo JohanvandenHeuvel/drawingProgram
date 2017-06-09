@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
@@ -82,7 +83,7 @@ public class designController {
 		borderPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				System.out.println(event);
+//				System.out.println(event);
 
 				if (event.getCode().equals(KeyCode.D)) {
 					delete(selected);
@@ -95,6 +96,9 @@ public class designController {
 				}
 				if (event.getCode().equals(KeyCode.L)) {
 					Tools.selectToggle(Line);
+				}
+				if (event.getCode().equals(KeyCode.T)) {
+					Tools.selectToggle(Text);
 				}
 
 				// if (event.getCode().equals(KeyCode.Z)) {
@@ -326,6 +330,7 @@ public class designController {
 								((MyText) node).disableTextField();
 						nodes.add(new MyText(x1, y1, DrawingPane));
 						selected = nodes.size() - 1;
+//						select(selected);
 						break;
 					case "Line":
 					case "Rectangle":
@@ -363,6 +368,7 @@ public class designController {
 		DrawingPane.setOnMouseDragged(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				
 				x2 = event.getX(); // mouse-dragged x-coordinate
 				y2 = event.getY(); // mouse-dragged y-coordinate
 
@@ -377,12 +383,15 @@ public class designController {
 				}
 				if (Tools.getSelectedToggle() == Select && selected >= 0) {
 					if (resizing != -1) {
+//						resizing = isAnchor(x2,y2); doesnt work as mouse doesnt stay inside the anchor
+//						System.out.println(resizing);
 						if (nodes.get(selected) instanceof MyShape) {
 							resizingShape();
 						}
 						if (nodes.get(selected) instanceof MyImage) {
 							resizingImage();
 						}
+						
 					} else {
 						nodes.get(selected).move((x2 - x1), (y2 - y1));
 						select(selected);
@@ -456,32 +465,87 @@ public class designController {
 		double minY = Math.round(b.getMinY()) + xyCorrection;
 		double width = Math.round(b.getWidth()) - heightwidthCorrection;
 		double height = Math.round(b.getHeight()) - heightwidthCorrection;
+			
+		
+		System.out.println(resizing);
 
 		switch (resizing) {
-		case 1:
+		case 1://W
 			((MyShape) nodes.get(selected)).resizeShape(minX + delta_x, minY, width - delta_x, height);
 			break;
-		case 2:
+		case 2://SW
 			((MyShape) nodes.get(selected)).resizeShape(minX + delta_x, minY, width - delta_x, height + delta_y);
+			if(((MyShape) nodes.get(selected)).getShape() instanceof Line)
+			{
+				if(width - delta_x < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 7;
+				}
+				if(height + delta_y < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 0;
+				}
+			}
 			break;
-		case 3:
+		case 3://N
 			((MyShape) nodes.get(selected)).resizeShape(minX, minY + delta_y, width, height - delta_y);
 			break;
-		case 4:
+		case 4://S
 			((MyShape) nodes.get(selected)).resizeShape(minX, minY, width, height + delta_y);
 			break;
-		case 5:
+		case 5://NE
 			((MyShape) nodes.get(selected)).resizeShape(minX, minY + delta_y, width + delta_x, height - delta_y);
+			if(((MyShape) nodes.get(selected)).getShape() instanceof Line)
+			{
+				if(width + delta_x < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 0;
+				}
+				if(height - delta_y < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 7;
+				}
+			}
 			break;
-		case 6:
+		case 6://E
 			((MyShape) nodes.get(selected)).resizeShape(minX, minY, width + delta_x, height);
 			break;
-		case 7:
+		case 7: //SE
 			((MyShape) nodes.get(selected)).resizeShape(minX, minY, width + delta_x, height + delta_y);
+			if(((MyShape) nodes.get(selected)).getShape() instanceof Line)
+			{
+				if(width + delta_x < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 2;
+				}
+				if(height + delta_y < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 5;
+				}
+			}
 			break;
-		case 0:
-			((MyShape) nodes.get(selected)).resizeShape(minX + delta_x, minY + delta_y, width - delta_x,
-					height - delta_y);
+		case 0://NW
+			((MyShape) nodes.get(selected)).resizeShape(minX + delta_x, minY + delta_y, width - delta_x, height - delta_y);
+			if(((MyShape) nodes.get(selected)).getShape() instanceof Line)
+			{
+				if(height - delta_y < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 2;
+				}
+				if(width - delta_x < 1)
+				{
+					((MyShape) nodes.get(selected)).changeOrientation();
+					resizing = 5;
+				}
+			}
+			
 			break;
 		default:
 			break;
@@ -559,6 +623,29 @@ public class designController {
 				if (temp.equals(anchors[i])) {
 					return i;
 				}
+			}
+		}
+		return -1;
+	}
+	
+	public int isAnchor(double x, double y) {
+//		Shape temp = selectedShape(event);
+		
+		if (selected >= 0 && nodes.get(selected) instanceof MyShape) {
+			Circle[] anchors = ((MyShape) nodes.get(selected)).getAnchors();
+			for (int i = 0; i < anchors.length; i++) {
+				Bounds b = anchors[i].getBoundsInParent();
+				if (b.contains(new Point2D(x,y)))
+					return i;
+			}
+		}
+
+		if (selected >= 0 && nodes.get(selected) instanceof MyImage) {
+			Circle[] anchors = ((MyImage) nodes.get(selected)).getAnchors();
+			for (int i = 0; i < anchors.length; i++) {
+				Bounds b = anchors[i].getBoundsInParent();
+				if (b.contains(new Point2D(x,y)))
+					return i;
 			}
 		}
 		return -1;
