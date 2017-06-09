@@ -90,9 +90,24 @@ public class MyShape implements MyNode {
 		if(shape instanceof Line)
 			shape = new Line(x1, y1, x2, y2);
 		if(shape instanceof Rectangle)
+			//(x,y,width,height)
 			shape = new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2)); 
 		if(shape instanceof Ellipse)
-			shape = new Ellipse(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));
+		{
+			//(centerX, centerY, radiusX, radiusY)
+			Shape temp = new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2)); 
+			Bounds b = temp.getBoundsInParent();
+			
+			double centerX = b.getMinX() + b.getWidth()/2;
+			double centerY = b.getMinY() + b.getHeight()/2;
+			
+			double radiusX = b.getWidth()/2;
+			double radiusY = b.getHeight()/2;
+		
+			shape = new Ellipse(centerX, centerY, radiusX, radiusY);
+//			shape = new Ellipse(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));
+		}
+			
 		setSettings();
 	}
 	
