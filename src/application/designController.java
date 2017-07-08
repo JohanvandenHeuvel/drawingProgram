@@ -118,7 +118,7 @@ public class designController {
 		nodes.add(new MyImage(file, DrawingPane));
 		nodes.get(nodes.size() - 1).draw();
 		selected = nodes.size() - 1;
-		select(selected);
+//		select(selected);
 		Tools.selectToggle(Select);
 	}
 
@@ -807,6 +807,10 @@ public class designController {
 	}
 
 	public void select(int i) {
+//		if (selected > -1)
+//			if(i == selected)
+//				return;
+		
 		for (MyNode node : nodes) {
 			if (node.getSelected() == true)
 				node.unselect();

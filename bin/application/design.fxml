@@ -19,7 +19,7 @@
     </Pane>
   </center>
   <left>
-    <VBox disable="false" fillWidth="true" focusTraversable="false" maxHeight="-Infinity" maxWidth="-1.0" minWidth="-1.0" prefHeight="0.0" prefWidth="0.0" rotate="0.0" visible="false" BorderPane.alignment="TOP_LEFT">
+    <VBox disable="false" fillWidth="true" focusTraversable="false" maxHeight="-Infinity" maxWidth="-1.0" minWidth="-1.0" prefHeight="667.0" prefWidth="307.0" rotate="0.0" visible="true" BorderPane.alignment="TOP_LEFT">
       <children>
         <GridPane alignment="CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="30.0" minHeight="-Infinity" opacity="1.0" prefHeight="400.0" prefWidth="600.0" vgap="110.0" visible="true" VBox.vgrow="NEVER">
           <children>
@@ -191,6 +191,9 @@
           </rowConstraints>
         </GridPane>
       </children>
+      <padding>
+        <Insets left="10.0" />
+      </padding>
       <BorderPane.margin>
         <Insets fx:id="x1" />
       </BorderPane.margin>
